@@ -3,6 +3,7 @@ from datetime import datetime
 from flask import Flask
 from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
+import uuid
 
 app = Flask(__name__)
 api = Api(app)
@@ -19,6 +20,7 @@ class UserModel(db.Model):
     data_cadastro = db.Column(db.DateTime, default=datetime.utcnow)
     foto = db.Column(db.String(1000))
     bio = db.Column(db.String(240))
+    api_key = db.Column(db.String(36), unique=True, default=lambda: str(uuid.uuid4()))
 
     def __repr__(self):
         return f"User(nome={self.nome}, email={self.email}, data_cadastro={self.data_cadastro})"
@@ -32,6 +34,7 @@ class UserModel(db.Model):
             'data_cadastro': self.data_cadastro,
             'foto': self.foto,
             'bio': self.bio,
+            'api_key': self.api_key,
         }
         return user_data
 
@@ -94,42 +97,30 @@ user_put_args.add_argument("nome", type=str, help="Nome é necessário", require
 user_put_args.add_argument("email", type=str, help="E-mail é necessário", required=True)
 user_put_args.add_argument("senha", type=str, help="Senha é necessária", required=True)
 user_put_args.add_argument("tipo", type=int, help="Tipo é necessário", required=True)
-user_update_args = reqparse.RequestParser()
-user_update_args.add_argument("nome", type=str, help="Nome é necessário")
-user_update_args.add_argument("email", type=str, help="E-mail é necessário")
-user_update_args.add_argument("senha", type=str, help="Senha é necessária")
-user_update_args.add_argument("tipo", type=int, help="Tipo é necessário")
+user_put_args.add_argument("foto", type=str, help="URL ou caminho da mídia", required=False)
+user_put_args.add_argument("bio", type=str, help="Descrição do usuário", required=False)
 
 post_put_args = reqparse.RequestParser()
 post_put_args.add_argument("titulo", type=str, help="Título é necessário", required=True)
 post_put_args.add_argument("conteudo", type=str, help="Conteúdo é necessário", required=True)
-post_put_args.add_argument("media", type=str, help="URL ou caminho da mídia")
+post_put_args.add_argument("media", type=str, help="URL ou caminho da mídia", required=False)
 post_put_args.add_argument("usuario_id", type=int, help="ID do usuário é necessário", required=True)
-post_update_args = reqparse.RequestParser()
-post_update_args.add_argument("titulo", type=str, help="Título é necessário", required=True)
-post_update_args.add_argument("conteudo", type=str, help="Conteúdo é necessário", required=True)
-post_update_args.add_argument("media", type=str, help="URL ou caminho da mídia")
-post_update_args.add_argument("usuario_id", type=int, help="ID do usuário é necessário", required=True)
 
 comment_put_args = reqparse.RequestParser()
 comment_put_args.add_argument("conteudo", type=str, help="Conteúdo é necessário", required=True)
 comment_put_args.add_argument("usuario_id", type=int, help="ID do usuário é necessário", required=True)
 comment_put_args.add_argument("postagem_id", type=int, help="ID do usuário é necessário", required=True)
-comment_update_args = reqparse.RequestParser()
-comment_update_args.add_argument("conteudo", type=str, help="Conteúdo é necessário", required=True)
-comment_update_args.add_argument("usuario_id", type=int, help="ID do usuário é necessário", required=True)
-comment_update_args.add_argument("postagem_id", type=int, help="ID da postagem é necessário", required=True)
 
 #Fields
 user_fields = {
     'id': fields.Integer,
     'nome': fields.String,
     'email': fields.String,
-    'senha': fields.String,
     'tipo': fields.Integer,
     'data_cadastro': fields.DateTime,
     'foto': fields.String,
-    'bio': fields.String
+    'bio': fields.String,
+    'api_key' : fields.String
 }
 
 post_fields = {
@@ -153,6 +144,11 @@ comment_fields = {
 }
 
 #Resources
+class Pong(Resource) :
+    def get(self):
+        message = {'message' : "pong"}
+        return message
+
 class User(Resource):
     @marshal_with(user_fields)
     def get(self, user_id):
@@ -171,22 +167,48 @@ class User(Resource):
         return user.to_dict(), 201
     
     @marshal_with(user_fields)
-    def put(self, user_id):
+    def put(self, api_key, user_id):
         args = user_put_args.parse_args()
-        result = UserModel.query.filter_by(id=user_id).first()
-        if result:
-            abort(409, message="Usuário já cadastrado!")
 
-        hashed_password = generate_password_hash(args['senha'])
-        user = UserModel(nome=args['nome'], email=args['email'], senha=hashed_password, tipo=args['tipo'], foto=args['foto'], bio=args['bio'])
-        db.session.add(user)
-        db.session.commit()
-        return user.to_dict(), 201
+        if not api_key:
+            abort(401, message="API Key é obrigatória!")
 
-    def delete(self, user_id):
+        usuario_dono_da_key = UserModel.query.filter_by(api_key=api_key).first()
+        if not usuario_dono_da_key:
+            abort(403, message="API Key inválida!")
+
+        if usuario_dono_da_key.id != user_id:
+            abort(403, message="Usuário não autorizado a realizar essa operação!")
+
         result = UserModel.query.filter_by(id=user_id).first()
         if not result:
-            abort(404, message="Usuário não encontrado!")
+            abort(404, message="Usuário não encontrado para atualizar!")
+
+        result.nome = args['nome']
+        result.email = args['email']
+        result.senha = generate_password_hash(args['senha'])
+        result.tipo = args['tipo']
+        result.foto = args['foto']
+        result.bio = args['bio']
+
+        db.session.commit()
+
+        return result.to_dict(), 200
+
+    def delete(self, api_key, user_id):
+        if not api_key:
+            abort(401, message="API Key é obrigatória!")
+
+        usuario_dono_da_key = UserModel.query.filter_by(api_key=api_key).first()
+        if not usuario_dono_da_key:
+            abort(403, message="API Key inválida!")
+
+        if usuario_dono_da_key.id != user_id:
+            abort(403, message="Usuário não autorizado a realizar essa operação!")
+
+        result = UserModel.query.filter_by(id=user_id).first()
+        if not result:
+            abort(404, message="Usuário não encontrado para atualizar!")
         
         db.session.delete(result)
         db.session.commit()
@@ -267,9 +289,11 @@ class Comment(Resource):
         return "", 204
 
 #URI API
-api.add_resource(User, "/user", "/user/<int:user_id>")
-api.add_resource(Post, "/post", "/post/<int:post_id>")
-api.add_resource(Comment, "/comment", "/comment/<int:comment_id>")
+api.add_resource(Pong, "/api/v0.0.1/ping")
+api.add_resource(User, "/api/v0.0.1/user", "/api/v0.0.1/user/<int:user_id>" , "/api/v0.0.1/user/<string:api_key>/<int:user_id>")
+api.add_resource(Post, "/api/v0.0.1/post", "/api/v0.0.1/post/<int:post_id>" , "/api/v0.0.1/post/<string:api_key>/<int:post_id>")
+api.add_resource(Comment, "/api/v0.0.1/comment", "/api/v0.0.1/comment/<int:comment_id>" , "/api/v0.0.1/comment/<string:api_key>/<int:comment_id>")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
