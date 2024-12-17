@@ -1,0 +1,24 @@
+header {
+    position: absolute;
+    width: 70%;
+    padding: 0 15%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--color-white);
+}
+
+.logo-header img {
+    height: 98px;
+}
+
+nav ul {
+    display: flex;
+    flex-direction: row;
+    gap: 40px
+}
+
+.user-header i {
+    font-size: 2rem;
+}
