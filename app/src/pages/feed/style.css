@@ -1,0 +1,246 @@
+html {
+    background-color: var(--color-white);
+}
+
+main {
+    padding-top: 103px;
+}
+
+header {
+    color: var(--color-black);
+}
+
+/* BUSCAR */
+.container-buscar {
+    width: 100%;
+    transition: all 0.2s ease;
+    background: var(--color-white);
+}
+
+.buscar {
+    width: 60%;
+    margin: auto;
+    padding: 40px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--color-black);
+    transition: all 0.2s ease;
+}
+
+.search-buscar i {
+    font-size: 1rem;
+    position: absolute;
+    margin-left: 0.5rem;
+    margin-top: 0.65rem;
+    cursor: pointer;
+}
+
+.search-buscar input{
+    font-family: var(--font-poppins);
+    border: none;
+    border-bottom: 1px solid var(--color-black);
+    padding: 5px 7px 5px 31px;
+    font-weight: 300;
+    font-size: 1rem;
+    background-color: transparent;
+    width: 300px;
+}
+
+.filter-buscar i{
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.fixed {
+    top: 0;
+    position: fixed;
+    margin: auto;
+    box-shadow: 0px 0px 5px var(--color-black);
+}
+
+.fixed .buscar {
+    padding: 20px 0;
+}
+
+.container-filter {
+    color: var(--color-black);
+    flex-direction: row;
+    justify-content: space-between;
+    height: 0;
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.appears {
+    height: auto;
+    padding-bottom: 50px;
+}
+
+.fixed .appears {
+    padding-bottom: 30px;
+}
+
+.filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: flex-end;
+}
+
+.filter button {
+    background-color: #BB5A3A;
+    border: 1px solid #BB5A3A;
+    color: var(--color-white);
+    border-radius: 4px;
+    width: 100px;
+    align-items: flex-end;
+    padding: 5.5px;
+    font-size: 1rem;
+    font-family: var(--font-poppins);
+    cursor: pointer;
+}
+
+.type-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.inputs-filter{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.cat {
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #BB5A3A;
+    display: inline-block;
+}
+
+.cat label {
+    float: left;
+    cursor: pointer;
+}
+
+.cat label input {
+    position: absolute;
+    display: none;
+    color: #000 !important;
+}
+
+.cat label input + span {
+    color: #BB5A3A;
+}
+
+.cat label span {
+    text-align: center;
+    display: block;
+    padding: 10px 10px;
+}
+
+.cat input:checked + span {
+    color: #ffffff;
+    background-color: #BB5A3A;
+    transition: all 0.1s ease;
+}
+
+/* posts */
+.container-postagem {
+    display: flex;
+    flex-direction: column;
+}
+
+.container-postagem .bi-arrow-repeat {
+    display: none;
+    color: var(--color-black);
+    font-size: 2rem;
+    margin: auto;
+    animation: loading infinite 1.5s ease-out;
+}
+
+@keyframes loading {
+    0% {
+        transform: rotateZ(0deg);
+    } 100% {
+        transform: rotateZ(360deg);
+    }
+}
+
+.postagens {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 60%;
+    margin: auto;
+    justify-content: space-between;
+}
+
+.post {
+    color: var(--color-black);
+    width: 45%;
+    margin-bottom: 10%;
+}
+
+.img-post {
+    max-height: 250px;
+    overflow: hidden;
+}
+
+.img-post img {
+    width: 100%;
+}
+
+.text-post {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border: 1px solid currentColor;
+    border-top: none;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.text-post p {
+    line-height: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.text-post i {
+    font-weight: 300;
+    letter-spacing: 4px;
+}
+
+.info-text-post {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    border-top: 1px solid var(--color-black);
+    align-items: center;
+}
+
+.info-text-post i {
+    cursor: pointer;
+}
+
+.info-text-post i:nth-child(5) {
+    color: var(--color-red);
+    margin-left: auto;
+}
+
+.info {
+    vertical-align: middle;
+    font-size: 0.9rem;
+    margin-left: -15px;
+}

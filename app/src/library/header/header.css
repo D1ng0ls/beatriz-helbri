@@ -6,11 +6,15 @@ header {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid var(--color-white);
+    border-bottom: 2px solid currentColor;
 }
 
 .logo-header img {
     height: 98px;
+}
+
+.logo-black img {
+    mix-blend-mode:multiply;
 }
 
 nav ul {

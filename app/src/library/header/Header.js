@@ -1,13 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom';
+
 import ImgHeader1 from "./../../media/global/logo-white.png"
 import ImgHeader2 from "./../../media/global/logo-black.png"
 import './header.css'
 
 export default function Header() {
+    const [logoHeader, setLogoHeader] = useState(ImgHeader2);
+    const [logoState, setLogoState] = useState(false);
+
+    const location = useLocation();
+
+    useEffect(() => {
+        if (['/'].includes(location.pathname)) {
+            setLogoHeader(ImgHeader1);
+            setLogoState(true);
+        } else {
+            setLogoHeader(ImgHeader2);
+            setLogoState(false);
+        }
+    }, [location.pathname]);
+
     return (
         <header>
-            <div className="logo-header">
-                <img src={ImgHeader1}></img>
+            <div className={`logo-header ${!logoState ? 'logo-black' : ''} `}>
+                <img src={logoHeader}></img>
             </div>
             <nav className="menu-header">
                 <ul>
@@ -15,7 +32,7 @@ export default function Header() {
                         <a href="/">Home</a>
                     </li>
                     <li>
-                        <a href="/posts">Posts</a>
+                        <a href="/feed">Posts</a>
                     </li>
                     <li>
                         <a href="/sobre">Sobre</a>

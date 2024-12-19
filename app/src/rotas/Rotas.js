@@ -1,8 +1,9 @@
 import React from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import Index from './../pages/index/Index';
 import PrivateRoute from './PrivateRoute';
 
+import Index from './../pages/index/Index';
+import Feed from './../pages/feed/Feed';
 
 const Rotas = () => {
   const location = useLocation();
@@ -10,10 +11,9 @@ const Rotas = () => {
   React.useEffect(() => {
     if (location.pathname === '/') {
       require('./../pages/index/style.css');
-    } //else if (location.pathname === '/noticias') {
-//       require('./../style/pages/noticias/style.css');
-//       require('./../style/pages/noticias/mobile.css');
-//     } else if (location.pathname === '/eventos') {
+    } else if (location.pathname === '/feed') {
+      require('./../pages/feed/style.css');
+    } // else if (location.pathname === '/eventos') {
 //       require('./../style/pages/eventos/style.css');
 //     } else if (location.pathname === '/posts') {
 //       require('./../style/pages/posts/style.css');
@@ -35,6 +35,7 @@ const Rotas = () => {
       <Routes>
         <Route element={<PrivateRoute />}>
         <Route path="/" element={<Index/>} />
+        <Route path="/feed" element={<Feed/>} />
         </Route>
       </Routes>
     </>
