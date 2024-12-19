@@ -21,7 +21,7 @@ export default function Header() {
                         <a href="/sobre">Sobre</a>
                     </li>
                     <li>
-                        <a href="/social">Redes</a>
+                        <a href="/social">Contato</a>
                     </li>
                 </ul>
             </nav>

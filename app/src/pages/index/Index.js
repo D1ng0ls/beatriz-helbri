@@ -2,6 +2,7 @@ import React from "react";
 import Home from './Home'
 import Destaque from "./Destaque";
 import SobrePosts from "./SobrePosts";
+import CTA from "./CTA";
 
 export default function Index() {
     return (
@@ -9,6 +10,7 @@ export default function Index() {
             <Home/>
             <Destaque/>
             <SobrePosts/>
+            <CTA/>
         </main>
     )
 }

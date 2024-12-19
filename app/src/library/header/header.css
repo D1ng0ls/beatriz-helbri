@@ -1,6 +1,6 @@
 header {
     position: absolute;
-    width: 70%;
+    width: 100%;
     padding: 0 15%;
     display: flex;
     flex-direction: row;
@@ -16,7 +16,8 @@ header {
 nav ul {
     display: flex;
     flex-direction: row;
-    gap: 40px
+    gap: 60px;
+    font-size: 1.1rem;
 }
 
 .user-header i {

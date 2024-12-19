@@ -1,0 +1,52 @@
+.container-destaque {
+    padding: 100px 0;
+    background-color: var(--color-white);
+}
+
+.container-destaque hr {
+    width: 70%;
+    margin-top: 100px;
+}
+
+.destaque, .postagem {
+    margin: auto;
+    width: 40%;
+    color: var(--color-black);
+    border: 1px solid currentColor;
+}
+
+.destaque::before {
+    content: 'DESTAQUE';
+    background-color: var(--color-white);
+    position: absolute;
+    padding: 10px 20px;
+    letter-spacing: 4px;
+    /* border: 1px solid var(--color-black);
+    border-left: none;
+    border-top: none; */
+
+    color: #BB5A3A;
+    font-weight: 500;
+    font-family: var(--font-poppins);
+}
+
+.img-destaque {
+    max-height: 350px;
+    overflow: hidden;
+}
+
+.img-destaque img {
+    width: 100%;
+}
+
+.text-destaque {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.text-destaque i {
+    font-weight: 300;
+    letter-spacing: 4px;
+}
