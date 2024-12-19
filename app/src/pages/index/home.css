@@ -7,8 +7,6 @@
     align-items: center;
     justify-content: center;
     gap: 30px;
-    background: url('https://i.pinimg.com/originals/1f/a3/8e/1fa38ee20c17e41f514e450897048271.jpg') no-repeat center fixed;
-    background-size: cover;
 }
 
 .container-home button {

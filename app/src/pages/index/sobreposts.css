@@ -49,7 +49,7 @@
 }
 
 .text-postagem p {
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 3 !important;
 }
 
 /*Sobre*/
@@ -85,7 +85,7 @@
 }
 
 .sobre p {
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 4 !important;
 }
 
 .sobre a {

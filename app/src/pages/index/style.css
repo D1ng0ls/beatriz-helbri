@@ -3,6 +3,10 @@
 @import url('sobreposts.css');
 @import url('cta.css');
 
+html {
+    background-color: var(--color-white);
+}
+
 /* DEFAULT */
 .text-destaque p, .text-postagem p, .text-destaque h2, .text-postagem h2, .container-sobre p {
     line-height: 1.5rem;
