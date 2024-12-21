@@ -1,0 +1,100 @@
+html {
+    background-color: var(--color-white);
+}
+
+header, footer {
+    display: none;
+}
+
+body {
+    overflow: hidden;
+}
+
+.container-login {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.invert {
+    flex-direction: row-reverse;
+}
+
+.img-register {
+    background: url('https://images.pexels.com/photos/3217911/pexels-photo-3217911.jpeg?cs=srgb&dl=pexels-andyhvu-3217911.jpg&fm=jpg') no-repeat;
+}
+
+.img-login {
+    background: url('https://w0.peakpx.com/wallpaper/6/514/HD-wallpaper-tourist-traveler-backpack-cap-forest.jpg') no-repeat;
+}
+
+.img-change {
+    background: url('https://live.staticflickr.com/7412/16491936412_1a264b741a_b.jpg') no-repeat;
+}
+
+.left-container {
+    width: 40%;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+}
+
+.right-container {
+    color: var(--color-black);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 60%;
+    gap: 50px;
+}
+
+.right-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 30%;
+}
+
+.right-container form input, .right-container form button {
+    font-size: 1rem;
+    font-family: var(--font-poppins);
+    border: none;
+    border-bottom: 1px solid black;
+    width: 100%;
+}
+
+.right-container form a {
+    color: #BB5A3A;
+    text-decoration: underline;
+    font-weight: 600;
+    font-size: 0.8rem;
+    margin: -20px 0 0;
+    margin-left: auto;
+}
+
+.right-container form button {
+    border: 2px solid #BB5A3A;
+    background-color: #BB5A3A;
+    color: var(--color-white);
+    cursor: pointer;
+    border-radius: 4px;
+    /* width: fit-content; */
+    margin-left: auto;
+    padding: 5px 13px;
+    font-weight: 500;
+}
+
+.right-container form button:hover {
+    background-color: transparent;
+    color: #BB5A3A;
+}
+
+.right-container i>a {
+    color: #BB5A3A;
+    font-weight: 600;
+    text-decoration: underline;
+}
+

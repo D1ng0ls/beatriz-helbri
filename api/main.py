@@ -1,11 +1,15 @@
+from flask.json import jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import and_
+from flask_cors import CORS
 import uuid
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///database/user.db"
 db = SQLAlchemy(app)
@@ -151,10 +155,20 @@ class Pong(Resource) :
 
 class User(Resource):
     @marshal_with(user_fields)
-    def get(self, user_id):
-        result = UserModel.query.filter_by(id=user_id).first()
+    def get(self, user_id=None, user_email=None):
+        if user_id :
+            result = UserModel.query.filter_by(id=user_id).first()
+        elif user_email :
+            result = UserModel.query.filter_by(email=user_email).first()
+        else :
+            result = UserModel.query.all()
+
         if not result:
             abort(404, message="Usuário não encontrado!")
+
+        if isinstance(result, list):
+            return [user.to_dict() for user in result]
+        
         return result.to_dict()
     
     @marshal_with(user_fields)
@@ -216,31 +230,46 @@ class User(Resource):
 
 class Post(Resource):
     @marshal_with(post_fields)
-    def get(self, post_id):
-        result = PostModel.query.filter_by(id=post_id).first()
-        if not result:
-            abort(404, message="Post não encontrado!")
-        return result.to_dict()
+    def get(self, post_id=None):
+        if post_id:
+            result = PostModel.query.filter_by(id=post_id).first()
+            if not result:
+                abort(404, message="Post não encontrado!")
+            return result.to_dict()
+
+        posts = PostModel.query.order_by(PostModel.data_postagem.desc()).all()
+        if not posts:
+            abort(404, message="Nenhum post encontrado!")
+        return [post.to_dict() for post in posts]
     
     @marshal_with(post_fields)
     def post(self):
-        args = post_put_args.parse_args()  # Garante que todos os campos definidos no parser estão presentes
-        post = PostModel(titulo=args['titulo'],conteudo=args['conteudo'], media=args.get('media'), usuario_id=args['usuario_id'])
+        args = post_put_args.parse_args()
+        post = PostModel(titulo=args['titulo'],conteudo=args['conteudo'], media=args['media'], usuario_id=args['usuario_id'])
         db.session.add(post)
         db.session.commit()
         return post, 201
     
     @marshal_with(post_fields)
     def put(self, post_id):
-        args = post_put_args.parse_args()
+        data = request.get_json()
         result = PostModel.query.filter_by(id=post_id).first()
-        if result:
-            abort(409, message="Post já cadastrado!")
+        if not result:
+            abort(404, message="Post não encontrado!")
 
-        post = PostModel(titulo=args['titulo'], conteudo=args['conteudo'], media=args['media'], usuario_id=args['usuario_id'])
-        db.session.add(post)
+        if data.get('titulo'):
+            result.titulo = data.get('titulo')
+        if data.get('conteudo'):
+            result.conteudo = data.get('conteudo')
+        if data.get('media'):
+            result.media = data.get('media')
+        if data.get('views'):
+            result.views = data.get('views')
+        if data.get('likes'):
+            result.likes = data.get('likes')
+
         db.session.commit()
-        return post.to_dict(), 201
+        return "", 200
 
     def delete(self, post_id):
         result = PostModel.query.filter_by(id=post_id).first()
@@ -253,11 +282,37 @@ class Post(Resource):
 
 class Comment(Resource):
     @marshal_with(comment_fields)
-    def get(self, comment_id):
-        result = CommentModel.query.filter_by(id=comment_id).first()
-        if not result:
-            abort(404, message="Comentário não encontrado!")
-        return result.to_dict()
+    def get(self, type=None, id=None, usuario=None):
+        if not type:
+            abort(401, message="Tipo é necessário! (id / post / user)")
+        if not id:
+            abort(401, message="Id é necessário! (comment_id / postagem_id / user_id)")
+        if (type == 'id' or type == 'user') and usuario:
+            abort(405, message="Ação não permitida!")
+
+        if type == 'id':
+            result = CommentModel.query.filter_by(id=id).first()
+            if not result:
+                abort(404, message='Comentário não encontrado!')
+            return result.to_dict()
+        
+        elif type == 'post':
+            if usuario :
+                comments = CommentModel.query.filter_by(postagem_id=id, usuario_id=usuario).order_by(CommentModel.data_comentario.desc()).all()
+            else :
+                comments = CommentModel.query.filter_by(postagem_id=id).order_by(CommentModel.data_comentario.desc()).all()
+
+        elif type == 'user':
+            comments = CommentModel.query.filter_by(usuario_id=id).order_by(CommentModel.data_comentario.desc()).all()
+        
+        else:
+            abort(404, message="Tipo não condiz! (id / post / user)")
+
+        if not comments:
+            return jsonify([])
+        
+        return [comment.to_dict() for comment in comments]
+
     
     @marshal_with(comment_fields)
     def post(self):
@@ -290,9 +345,9 @@ class Comment(Resource):
 
 #URI API
 api.add_resource(Pong, "/api/v0.0.1/ping")
-api.add_resource(User, "/api/v0.0.1/user", "/api/v0.0.1/user/<int:user_id>" , "/api/v0.0.1/user/<string:api_key>/<int:user_id>")
+api.add_resource(User, "/api/v0.0.1/user", "/api/v0.0.1/user/id/<int:user_id>", "/api/v0.0.1/user/email/<string:user_email>" , "/api/v0.0.1/user/<string:api_key>/<int:user_id>")
 api.add_resource(Post, "/api/v0.0.1/post", "/api/v0.0.1/post/<int:post_id>" , "/api/v0.0.1/post/<string:api_key>/<int:post_id>")
-api.add_resource(Comment, "/api/v0.0.1/comment", "/api/v0.0.1/comment/<int:comment_id>" , "/api/v0.0.1/comment/<string:api_key>/<int:comment_id>")
+api.add_resource(Comment, "/api/v0.0.1/comment", "/api/v0.0.1/comment/<string:type>/<int:id>", "/api/v0.0.1/comment/<string:type>/<int:id>/<int:usuario>")
 
 
 if __name__ == "__main__":

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-export default function Buscar() {
+export default function Buscar({ onFilterChange }) {
     const [buscarFixed, setBuscarFixed] = useState(false);
     const [filterAppears, setFilterAppears] = useState(false);
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [selectedTime, setSelectedTime] = useState("recentes");
 
     useEffect(() => {
         const handleScroll = () => {
@@ -15,62 +17,57 @@ export default function Buscar() {
         };
     }, []);
 
-    const togglefilter = () => {
+    const toggleFilter = () => {
         setFilterAppears(!filterAppears);
     };
 
-    return(
+    const handleCategoryChange = (e) => {
+        const category = e.target.value;
+        setSelectedCategories((prev) => {
+            if (prev.includes(category)) {
+                return prev.filter((item) => item !== category);
+            } else {
+                return [...prev, category];
+            }
+        });
+    };
+
+    const handleTimeChange = (e) => {
+        setSelectedTime(e.target.id);
+    };
+
+    const applyFilter = () => {
+        onFilterChange(selectedCategories, selectedTime);  // Passa os filtros para o componente de posts
+    };
+
+    return (
         <div className={`container-buscar ${buscarFixed ? 'fixed' : ''}`}>
             <div className="buscar">
                 <div className="search-buscar">
                     <i className="bi bi-search"></i>
-                    <input type="text" name="Search" maxLength={40} placeholder="Buscar"></input>
+                    <input type="text" name="Search" maxLength={40} placeholder="Buscar" />
                 </div>
                 <div className="filter-buscar">
-                    <i className={`bi bi-${filterAppears ? 'x-lg' : 'filter'}`} onClick={togglefilter}></i>
+                    <i className={`bi bi-${filterAppears ? 'x-lg' : 'filter'}`} onClick={toggleFilter}></i>
                 </div>
             </div>
             <div className={`container-filter ${filterAppears ? 'appears' : ''}`}>
                 <div className="filter">
                     <div className="tema-filter type-filter">
-                        <span>Tema:</span>
+                        <span>Categorias:</span>
                         <div className="inputs-filter">
-                            <div className="cat">
-                                <label>
-                                    <input type="checkbox" name="viagens" id="viagens" value='viagens'/>
-                                    <span>Viagens</span>
-                                </label>
-                            </div>
-                            <div className="cat">
-                                <label>
-                                    <input type="checkbox" name="arte" id="arte" value="arte"/>
-                                    <span>Arte</span>
-                                </label>
-                            </div>
-                            <div className="cat">
-                                <label>
-                                    <input type="checkbox" name="cultura" id="cultura" value="cultura"/>
-                                    <span>Cultura</span>
-                                </label>
-                            </div>
-                            <div className="cat">
-                                <label>
-                                    <input type="checkbox" name="diadia" id="diadia" value="diadia"/>
-                                    <span>Dia a dia</span>
-                                </label>
-                            </div>
-                            <div className="cat">
-                                <label>
-                                    <input type="checkbox" name="opiniao" id="opiniao" value="opiniao"/>
-                                    <span>Opinião</span>
-                                </label>
-                            </div>
-                            <div className="cat">
-                                <label>
-                                    <input type="checkbox" name="saude" id="saude" value="saude"/>
-                                    <span>Saúde</span>
-                                </label>
-                            </div>
+                            {["viagens", "arte", "cultura", "diadia", "opiniao", "saude"].map((category) => (
+                                <div className="cat" key={category}>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            value={category}
+                                            onChange={handleCategoryChange}
+                                        />
+                                        <span>{category.charAt(0).toUpperCase() + category.slice(1)}</span>
+                                    </label>
+                                </div>
+                            ))}
                         </div>
                     </div>
                     <div className="time-filter type-filter">
@@ -78,21 +75,33 @@ export default function Buscar() {
                         <div className="inputs-filter">
                             <div className="cat">
                                 <label>
-                                    <input type="radio" name="tempo" id="recentes" checked/>
+                                    <input
+                                        type="radio"
+                                        name="tempo"
+                                        id="recentes"
+                                        checked={selectedTime === "recentes"}
+                                        onChange={handleTimeChange}
+                                    />
                                     <span>Mais recentes</span>
                                 </label>
                             </div>
                             <div className="cat">
                                 <label>
-                                    <input type="radio" name="tempo" id="recentes"/>
+                                    <input
+                                        type="radio"
+                                        name="tempo"
+                                        id="antigas"
+                                        checked={selectedTime === "antigas"}
+                                        onChange={handleTimeChange}
+                                    />
                                     <span>Mais antigas</span>
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <button>Filtrar</button>
+                    <button onClick={applyFilter}>Filtrar</button>
                 </div>
             </div>
         </div>
-    )
+    );
 }

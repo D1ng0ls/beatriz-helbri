@@ -1,0 +1,85 @@
+.container-filter {
+    color: var(--color-black);
+    flex-direction: row;
+    justify-content: space-between;
+    height: 0;
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.appears {
+    height: auto;
+    padding-bottom: 50px;
+}
+
+.fixed .appears {
+    padding-bottom: 30px;
+}
+
+.filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: flex-end;
+}
+
+.filter button {
+    background-color: #BB5A3A;
+    border: 1px solid #BB5A3A;
+    color: var(--color-white);
+    border-radius: 4px;
+    width: 100px;
+    align-items: flex-end;
+    padding: 5.5px;
+    font-size: 1rem;
+    font-family: var(--font-poppins);
+    cursor: pointer;
+}
+
+.type-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.inputs-filter{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.cat {
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #BB5A3A;
+    display: inline-block;
+}
+
+.cat label {
+    float: left;
+    cursor: pointer;
+}
+
+.cat label input {
+    position: absolute;
+    display: none;
+    color: #000 !important;
+}
+
+.cat label input + span {
+    color: #BB5A3A;
+}
+
+.cat label span {
+    text-align: center;
+    display: block;
+    padding: 10px 10px;
+}
+
+.cat input:checked + span {
+    color: #ffffff;
+    background-color: #BB5A3A;
+    transition: all 0.1s ease;
+}

@@ -4,38 +4,47 @@ import PrivateRoute from './PrivateRoute';
 
 import Index from './../pages/index/Index';
 import Feed from './../pages/feed/Feed';
+import Sobre from './../pages/sobre/Sobre';
+import Contato from '../pages/contato/Contato';
+import Register from '../pages/login/Register';
+import Login from '../pages/login/Login';
+import ChangePassword from '../pages/login/ChangePassword';
+import User from '../pages/user/User';
 
 const Rotas = () => {
   const location = useLocation();
 
   React.useEffect(() => {
     if (location.pathname === '/') {
-      require('./../pages/index/style.css');
+      require('./../pages/index/index.css');
     } else if (location.pathname === '/feed') {
-      require('./../pages/feed/style.css');
-    } // else if (location.pathname === '/eventos') {
-//       require('./../style/pages/eventos/style.css');
-//     } else if (location.pathname === '/posts') {
-//       require('./../style/pages/posts/style.css');
-//     } else if (location.pathname === '/sobre') {
-//       require('./../style/pages/sobre/style.css');
-//       require('./../style/pages/sobre/mobile.css');
-//     } else if (location.pathname === '/faq') {
+      require('./../pages/feed/feed.css');
+    } else if (location.pathname === '/sobre') {
+      require('./../pages/sobre/sobre.css');
+    } else if (location.pathname === '/contato') {
+      require('./../pages/contato/contato.css');
+//   } else if (location.pathname === '/faq') {
 //       require('./../style/pages/faq/style.css');
 //       require('./../style/pages/faq/mobile.css');
-//     } else if (location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/changepassword') {
-//       require('./../style/pages/login/style.css');
-//     } else if (location.pathname === '/user') {
-//       require('./../style/pages/user/style.css');
-//     }
+    } else if (location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/changepassword') {
+      require('./../pages/login/login.css');
+    } else if (location.pathname === '/user') {
+      require('./../pages/user/user.css');
+    }
   }, [location.pathname]);
 
   return (
     <>
       <Routes>
         <Route element={<PrivateRoute />}>
-        <Route path="/" element={<Index/>} />
-        <Route path="/feed" element={<Feed/>} />
+          <Route path="/" element={<Index/>} />
+          <Route path="/feed" element={<Feed/>} />
+          <Route path="/sobre" element={<Sobre/>} />
+          <Route path="/contato" element={<Contato/>} />
+          <Route path="/register" element={<Register/>} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/changepassword" element={<ChangePassword/>} />
+          <Route path="/user" element={<User/>} />
         </Route>
       </Routes>
     </>

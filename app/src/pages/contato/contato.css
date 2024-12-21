@@ -1,0 +1,111 @@
+html {
+    background-color: var(--color-white);
+}
+
+header {
+    color: var(--color-black);
+}
+
+#contato {
+    color: #BB5A3A;
+    font-weight: 600;
+}
+
+.container-contato {
+    padding-top: 103px;
+}
+
+.contato {
+    width: 70%;
+    color: var(--color-black);
+    margin: 100px auto;
+    display: flex;
+    flex-direction: row;
+    align-items: self-start;
+    justify-content: center;
+    gap: 5%;
+}
+
+.social-contato {
+    color: var(--color-white);
+    width: 25%;
+    padding: 3%;
+    background-color: #BB5A3A;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.social-contato h2 {
+    line-height: 2.5rem;
+    text-align: center;
+}
+
+.sociais-follow-contato {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    border-top: 1px solid currentColor;
+}
+
+
+.sociais-follow-contato {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    border-top: 2px solid var(--color-white);
+    padding-top: 30px;
+}
+
+.sociais-follow-contato i {
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.forms-contato {
+    width: 60%;
+}
+
+.forms-contato form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.forms-contato form input, .forms-contato form textarea, .forms-contato form button {
+    width: 100%;
+    font-size: 1rem;
+    font-family: var(--font-poppins);
+    padding: 7px;
+    border-radius: 4px;
+    border: 1px solid var(--color-black);
+}
+
+.forms-contato form textarea {
+    height: 200px;
+    resize: none;
+}
+
+.forms-contato form textarea::placeholder {
+    font-family: var(--font-poppins);
+}
+
+.forms-contato form button {
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--color-white);
+    background-color: #BB5A3A;
+    border: 1px solid #BB5A3A;
+}
+
+.forms-contato form button:hover {
+    transition: all 0.2s;
+    color: #BB5A3A;
+    border: 1px solid currentColor;
+    background-color: var(--color-white);
+}

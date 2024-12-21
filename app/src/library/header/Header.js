@@ -28,17 +28,17 @@ export default function Header() {
             </div>
             <nav className="menu-header">
                 <ul>
-                    <li>
+                    <li id="home">
                         <a href="/">Home</a>
                     </li>
-                    <li>
+                    <li id="feed">
                         <a href="/feed">Posts</a>
                     </li>
-                    <li>
+                    <li id="sobre">
                         <a href="/sobre">Sobre</a>
                     </li>
-                    <li>
-                        <a href="/social">Contato</a>
+                    <li id="contato">
+                        <a href="/contato">Contato</a>
                     </li>
                 </ul>
             </nav>

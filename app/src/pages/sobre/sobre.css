@@ -1,0 +1,51 @@
+html {
+    background-color: var(--color-white);
+}
+
+header {
+    color: var(--color-black);
+}
+
+#sobre {
+    color: #BB5A3A;
+    font-weight: 600;
+}
+
+.container-sobre {
+    padding-top: 103px;
+}
+
+.sobre {
+    width: 70%;
+    margin: 100px auto;
+    color: var(--color-black);
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+
+.img-sobre {
+    width: 100%;
+}
+
+.img-sobre img {
+    width: 100%;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+}
+
+.text-sobre {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+}
+
+.text-sobre h2 {
+    color: #BB5A3A;
+}
+
+.text-sobre p {
+    line-height: 1.5rem;
+    letter-spacing: 2px;
+    max-width: 80%
+}

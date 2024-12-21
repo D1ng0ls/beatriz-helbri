@@ -1,0 +1,52 @@
+.container-buscar {
+    width: 100%;
+    transition: all 0.2s ease;
+    background: var(--color-white);
+}
+
+.buscar {
+    width: 60%;
+    margin: auto;
+    padding: 40px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--color-black);
+    transition: all 0.2s ease;
+}
+
+.search-buscar i {
+    font-size: 1rem;
+    position: absolute;
+    margin-left: 0.5rem;
+    margin-top: 0.65rem;
+    cursor: pointer;
+}
+
+.search-buscar input{
+    font-family: var(--font-poppins);
+    border: none;
+    border-bottom: 1px solid var(--color-black);
+    padding: 5px 7px 5px 31px;
+    font-weight: 300;
+    font-size: 1rem;
+    background-color: transparent;
+    width: 300px;
+}
+
+.filter-buscar i{
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.fixed {
+    top: 0;
+    position: fixed;
+    margin: auto;
+    box-shadow: 0px 0px 5px var(--color-black);
+}
+
+.fixed .buscar {
+    padding: 20px 0;
+}

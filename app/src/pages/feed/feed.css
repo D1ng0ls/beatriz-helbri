@@ -1,0 +1,20 @@
+@import url('buscar.css');
+@import url('filter.css');
+@import url('posts.css');
+
+html {
+    background-color: var(--color-white);
+}
+
+main {
+    padding-top: 103px;
+}
+
+header {
+    color: var(--color-black);
+}
+
+#feed {
+    color: #BB5A3A;
+    font-weight: 600;
+}
