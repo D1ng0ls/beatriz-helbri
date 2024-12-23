@@ -22,7 +22,7 @@ export default function SobrePosts() {
                 if (!response.ok) throw new Error("Postagem não encontrada.");
                 return response.json();
             })
-            .then((data) => setPost(data))  // Esperando um array de posts
+            .then((data) => setPost(data))
             .catch((error) => setErro(error.message));
     }, []);
 

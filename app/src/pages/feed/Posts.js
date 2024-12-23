@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function Posts({ selectedCategories, selectedTime }) {
+export default function Posts({ selectedCategories, selectedTime, searchText }) {
     const [posts, setPosts] = useState([]);
     const [comentarios, setComentarios] = useState({});
     const [erro, setErro] = useState(null);
@@ -15,21 +15,11 @@ export default function Posts({ selectedCategories, selectedTime }) {
                 if (!response.ok) throw new Error("Postagem não encontrada.");
                 return response.json();
             })
-            .then((data) => {
-                setPosts((prevPosts) => {
-                    const newPosts = data.filter(
-                        (post) => !prevPosts.some((prevPost) => prevPost.id === post.id)
-                    );
-                    return [...prevPosts, ...newPosts];
-                });
-            })
+            .then((data) => setPosts(data))
             .catch((error) => setErro(error.message))
             .finally(() => setLoading(false));
     };
 
-    useEffect(() => {
-        fetchPosts();
-    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -60,14 +50,31 @@ export default function Posts({ selectedCategories, selectedTime }) {
         }
     }, [posts]);
 
+
+    useEffect(() => {
+        fetchPosts();
+    }, []);
+
     const filteredPosts = posts
         .filter((post) => {
-            if (selectedCategories.length > 0) {
+            // Filtra por categoria
+            if (selectedCategories?.length > 0) {
                 return selectedCategories.includes(post.categoria);
             }
             return true;
         })
+        .filter((post) => {
+            // Filtra por texto de busca
+            if (searchText) {
+                return (
+                    post.titulo.toLowerCase().includes(searchText.toLowerCase()) ||
+                    post.conteudo.toLowerCase().includes(searchText.toLowerCase())
+                );
+            }
+            return true;
+        })
         .sort((a, b) => {
+            // Ordena por tempo
             if (selectedTime === "recentes") {
                 return new Date(b.data_postagem) - new Date(a.data_postagem);
             }
@@ -83,15 +90,18 @@ export default function Posts({ selectedCategories, selectedTime }) {
                 {filteredPosts.map((post, index) => (
                     <div className={`post post${index + 1}`} key={post.id}>
                         <div className="img-post">
-                            <img src={'media/upload/posts/' + post.media} alt={'Imagem de: ' + post.titulo} />
+                            <img
+                                src={"media/upload/posts/" + post.media}
+                                alt={"Imagem de: " + post.titulo}
+                            />
                         </div>
                         <div className="text-post">
                             <i>
                                 <time dateTime={post.data_postagem}>
                                     {new Date(post.data_postagem).toLocaleDateString("pt-BR", {
-                                        day: 'numeric',
-                                        month: 'short',
-                                        year: 'numeric',
+                                        day: "numeric",
+                                        month: "short",
+                                        year: "numeric",
                                     })}
                                 </time>
                                 <span className="tag-post">{post.categoria}</span>
@@ -107,7 +117,6 @@ export default function Posts({ selectedCategories, selectedTime }) {
                     </div>
                 ))}
             </div>
-            {loading && <i className="bi bi-arrow-repeat"></i>}
         </div>
     );
 }

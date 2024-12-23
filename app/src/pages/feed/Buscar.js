@@ -5,15 +5,16 @@ export default function Buscar({ onFilterChange }) {
     const [filterAppears, setFilterAppears] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedTime, setSelectedTime] = useState("recentes");
+    const [searchText, setSearchText] = useState(""); // Novo estado para a pesquisa
 
     useEffect(() => {
         const handleScroll = () => {
             setBuscarFixed(window.scrollY > 103);
         };
 
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener("scroll", handleScroll);
         return () => {
-            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener("scroll", handleScroll);
         };
     }, []);
 
@@ -37,21 +38,37 @@ export default function Buscar({ onFilterChange }) {
     };
 
     const applyFilter = () => {
-        onFilterChange(selectedCategories, selectedTime);  // Passa os filtros para o componente de posts
+    onFilterChange(selectedCategories, selectedTime);  // Passa os filtros para o componente de posts
+    }
+
+    // Atualiza o texto de busca
+    const handleSearchChange = (e) => {
+        setSearchText(e.target.value);
+        onFilterChange(selectedCategories, selectedTime, e.target.value); // Passa o texto de busca
     };
 
     return (
-        <div className={`container-buscar ${buscarFixed ? 'fixed' : ''}`}>
+        <div className={`container-buscar ${buscarFixed ? "fixed" : ""}`}>
             <div className="buscar">
                 <div className="search-buscar">
                     <i className="bi bi-search"></i>
-                    <input type="text" name="Search" maxLength={40} placeholder="Buscar" />
+                    <input
+                        type="text"
+                        name="Search"
+                        maxLength={40}
+                        placeholder="Buscar"
+                        value={searchText}
+                        onChange={handleSearchChange} // Atualiza o texto em tempo real
+                    />
                 </div>
                 <div className="filter-buscar">
-                    <i className={`bi bi-${filterAppears ? 'x-lg' : 'filter'}`} onClick={toggleFilter}></i>
+                    <i
+                        className={`bi bi-${filterAppears ? "x-lg" : "filter"}`}
+                        onClick={toggleFilter}
+                    ></i>
                 </div>
             </div>
-            <div className={`container-filter ${filterAppears ? 'appears' : ''}`}>
+            <div className={`container-filter ${filterAppears ? "appears" : ""}`}>
                 <div className="filter">
                     <div className="tema-filter type-filter">
                         <span>Categorias:</span>
