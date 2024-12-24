@@ -5,6 +5,7 @@ export default function Posts({ selectedCategories, selectedTime, searchText }) 
     const [comentarios, setComentarios] = useState({});
     const [erro, setErro] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [formattedText, setFormattedText] = useState("");
 
     const fetchPosts = () => {
         if (loading) return;
@@ -88,33 +89,35 @@ export default function Posts({ selectedCategories, selectedTime, searchText }) 
         <div className="container-postagem">
             <div className="postagens">
                 {filteredPosts.map((post, index) => (
-                    <div className={`post post${index + 1}`} key={post.id}>
-                        <div className="img-post">
-                            <img
-                                src={"media/upload/posts/" + post.media}
-                                alt={"Imagem de: " + post.titulo}
-                            />
-                        </div>
-                        <div className="text-post">
-                            <i>
-                                <time dateTime={post.data_postagem}>
-                                    {new Date(post.data_postagem).toLocaleDateString("pt-BR", {
-                                        day: "numeric",
-                                        month: "short",
-                                        year: "numeric",
-                                    })}
-                                </time>
-                                <span className="tag-post">{post.categoria}</span>
-                            </i>
-                            <h2>{post.titulo}</h2>
-                            <p>{post.conteudo}</p>
-                            <div className="info-text-post">
-                                <i className="bi bi-eye"></i><span className="info">{post.views}</span>
-                                <i className="bi bi-chat-dots"></i><span className="info">{comentarios[post.id] || 0}</span>
-                                <i className="bi bi-heart"></i><span className="info">{post.likes}</span>
+                    <a href={`/post/${post.categoria || "categoria"}/${new Date(post.data_postagem).getDay()}/${new Date(post.data_postagem).getMonth()+1}/${new Date(post.data_postagem).getFullYear()}/${post.id}/${post.titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()}`}>
+                        <div className={`post post${index + 1}`} key={post.id}>
+                            <div className="img-post">
+                                <img
+                                    src={"media/upload/posts/" + post.media}
+                                    alt={"Imagem de: " + post.titulo}
+                                />
+                            </div>
+                            <div className="text-post">
+                                <i>
+                                    <time dateTime={post.data_postagem}>
+                                        {new Date(post.data_postagem).toLocaleDateString("pt-BR", {
+                                            day: "numeric",
+                                            month: "short",
+                                            year: "numeric",
+                                        })}
+                                    </time>
+                                    <span className="tag-post">{post.categoria}</span>
+                                </i>
+                                <h2>{post.titulo}</h2>
+                                <p>{post.conteudo}</p>
+                                <div className="info-text-post">
+                                    <i className="bi bi-eye"></i><span className="info">{post.views}</span>
+                                    <i className="bi bi-chat-dots"></i><span className="info">{comentarios[post.id] || 0}</span>
+                                    <i className="bi bi-heart"></i><span className="info">{post.likes}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 ))}
             </div>
         </div>

@@ -10,6 +10,8 @@ import Register from '../pages/login/Register';
 import Login from '../pages/login/Login';
 import ChangePassword from '../pages/login/ChangePassword';
 import User from '../pages/user/User';
+import Post from '../pages/post/Post';
+import PostRedirect from '../pages/post/PostRedirect';
 
 const Rotas = () => {
   const location = useLocation();
@@ -23,9 +25,8 @@ const Rotas = () => {
       require('./../pages/sobre/sobre.css');
     } else if (location.pathname === '/contato') {
       require('./../pages/contato/contato.css');
-//   } else if (location.pathname === '/faq') {
-//       require('./../style/pages/faq/style.css');
-//       require('./../style/pages/faq/mobile.css');
+    } else if (location.pathname === '/post/:id') {
+      require('./../pages/post/post.css');
     } else if (location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/changepassword') {
       require('./../pages/login/login.css');
     } else if (location.pathname === '/user') {
@@ -45,6 +46,9 @@ const Rotas = () => {
           <Route path="/login" element={<Login/>} />
           <Route path="/changepassword" element={<ChangePassword/>} />
           <Route path="/user" element={<User/>} />
+          <Route path="/post" element={<PostRedirect/>} />
+          <Route path="/post/:categoria" element={<PostRedirect/>} />
+          <Route path="/post/:categoria/:dia/:mes/:ano/:id/:title" element={<Post/>} />
         </Route>
       </Routes>
     </>

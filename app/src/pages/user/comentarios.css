@@ -1,0 +1,147 @@
+.container-comments {
+    color: var(--color-black);
+    margin-bottom: 100px;
+}
+
+.container-comments h2 {
+    margin-bottom: 20px;
+}
+
+.container-comments hr {
+    margin: 0;
+}
+
+.search-filter {
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 40px 0;
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+    background: var(--color-white);
+    top: 0;
+    padding: 20px 0;
+    animation: aparece 0.3s;
+}
+
+@keyframes aparece {
+    0% {
+        transform: translateY(-113px);
+    } 100% {
+        transform: translateY(0);
+    }
+}
+
+.search-filter input, .search-filter button {
+    font-size: 0.9rem;
+    font-family: var(--font-poppins);
+    background-color: transparent;
+    border-radius: 4px;
+    border: 1px solid rgb(97, 97, 97);
+    padding: 5px 10px;
+}
+
+.search-filter input {
+    width: 300px;
+}
+
+.search-filter button {
+    color: #BB5A3A;
+    border-color: currentColor;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: #BB5A3A !important;
+    color: var(--color-white) !important;
+}
+
+.comentarios {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-top: 113px;
+}
+
+.search-comments, .filter-comments {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.comentario {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 30px 40px;
+    border: 1px solid rgb(97, 97, 97);
+    border-radius: 4px;
+}
+
+.header-comment {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-user-comment {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.info-user-comment img, .info-user-comment i{
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    font-size: 3rem;
+}
+
+.text-info-user {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+}
+
+.text-info-user p {
+    font-weight: 600;
+}
+
+.text-info-user time {
+    font-size: 0.9rem;
+    color: rgb(97, 97, 97);
+}
+
+.options-comment {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    font-size: 1.25rem;
+}
+
+.options-comment i {
+    cursor: pointer;
+}
+
+.options-comment i:last-child {
+    color: var(--color-red);
+}
+
+.post-comment h3 {
+    padding: 10px 20px;
+    border: 1px solid rgb(97, 97, 97);
+    border-bottom: none;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.post-comment img {
+    width: 100%;
+}

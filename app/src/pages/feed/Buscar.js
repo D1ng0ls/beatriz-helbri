@@ -5,7 +5,7 @@ export default function Buscar({ onFilterChange }) {
     const [filterAppears, setFilterAppears] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedTime, setSelectedTime] = useState("recentes");
-    const [searchText, setSearchText] = useState(""); // Novo estado para a pesquisa
+    const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
         const handleScroll = () => {
