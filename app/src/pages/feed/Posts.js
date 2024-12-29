@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 export default function Posts({ selectedCategories, selectedTime, searchText }) {
     const [posts, setPosts] = useState([]);
     const [comentarios, setComentarios] = useState({});
+    const [categoria, setCategoria] = useState([]);
     const [erro, setErro] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [formattedText, setFormattedText] = useState("");
 
     const fetchPosts = () => {
         if (loading) return;
@@ -51,6 +51,25 @@ export default function Posts({ selectedCategories, selectedTime, searchText }) 
         }
     }, [posts]);
 
+    useEffect(() => {
+        if (posts.length > 0) {
+            const fetchCategorias = async () => {
+                const categoriasMap = {};
+                for (const post of posts) {
+                    try {
+                        const response = await fetch(`http://127.0.0.1:5000/api/v0.0.1/category/${post.categoria_id}`);
+                        if (!response.ok) throw new Error("Categoria não encontrada.");
+                        const data = await response.json();
+                        categoriasMap[post.categoria_id] = data;
+                    } catch (error) {
+                        setErro(error.message);
+                    }
+                }
+                setCategoria(categoriasMap);
+            };
+            fetchCategorias();
+        }
+    }, [posts]);
 
     useEffect(() => {
         fetchPosts();
@@ -89,7 +108,7 @@ export default function Posts({ selectedCategories, selectedTime, searchText }) 
         <div className="container-postagem">
             <div className="postagens">
                 {filteredPosts.map((post, index) => (
-                    <a href={`/post/${post.categoria || "categoria"}/${new Date(post.data_postagem).getDay()}/${new Date(post.data_postagem).getMonth()+1}/${new Date(post.data_postagem).getFullYear()}/${post.id}/${post.titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()}`}>
+                    <a href={`/post/${categoria[post.id]?.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()}/${post.id}-${post.titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()}`}>
                         <div className={`post post${index + 1}`} key={post.id}>
                             <div className="img-post">
                                 <img
@@ -106,14 +125,14 @@ export default function Posts({ selectedCategories, selectedTime, searchText }) 
                                             year: "numeric",
                                         })}
                                     </time>
-                                    <span className="tag-post">{post.categoria}</span>
+                                    <span className="tag-post">{categoria[post.id]?.nome}</span>
                                 </i>
                                 <h2>{post.titulo}</h2>
                                 <p>{post.conteudo}</p>
                                 <div className="info-text-post">
-                                    <i className="bi bi-eye"></i><span className="info">{post.views}</span>
+                                    <i className="bi bi-eye"></i><span className="info">{post.views>999 ? post.views/1000 + "mil" : post.views}</span>
                                     <i className="bi bi-chat-dots"></i><span className="info">{comentarios[post.id] || 0}</span>
-                                    <i className="bi bi-heart"></i><span className="info">{post.likes}</span>
+                                    <i className="bi bi-heart"></i><span className="info">{post.likes>999 ? post.likes/1000 + "mil" : post.likes}</span>
                                 </div>
                             </div>
                         </div>

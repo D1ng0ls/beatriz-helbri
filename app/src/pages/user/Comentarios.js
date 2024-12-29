@@ -2,61 +2,66 @@ import React, { useState, useEffect, useRef} from "react";
 
 export default function Comentarios() {
     const [usuario, setUsuario] = useState(null);
-    const [comments, setComments] = useState(null);
+    const [comments, setComments] = useState([]);
     const [posts, setPosts] = useState({});
+    const [categorias, setCategorias] = useState({});
     const [erro, setErro] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filter, setFilter] = useState("recentes"); // Filtro "Recentes" como padrão
+    const [filter, setFilter] = useState("recentes");
 
     const [isPassed, setIsPassed] = useState(false);
-    const elementRef = useRef(null); // Referência para o elemento a ser monitorado
+    const elementRef = useRef(null);
 
     useEffect(() => {
         const handleScroll = () => {
             if (elementRef.current) {
                 const rect = elementRef.current.getBoundingClientRect();
-                // Se o topo do elemento atingir 0 ou passar disso
                 if (rect.top <= 0) {
-                    setIsPassed(true); // O topo do elemento chegou ao topo da janela
+                    setIsPassed(true);
                 } else {
-                    setIsPassed(false); // O elemento não atingiu o topo ainda
+                    setIsPassed(false);
                 }
             }
         };
 
-        // Adiciona o evento de scroll
         window.addEventListener("scroll", handleScroll);
 
-        // Limpeza do evento de scroll quando o componente for desmontado
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, []);
 
-    const user = 3;
+    const user = 1;
 
+    // Carregar o usuário
     useEffect(() => {
         fetch(`http://localhost:5000/api/v0.0.1/user/id/${user}`)
-        .then((response) => {
-            if (!response.ok) throw new Error("Usuário não encontrado.");
-            return response.json();
-        })
-        .then((data) => setUsuario(data))
-        .catch((error) => setErro(error.message));
+            .then((response) => {
+                if (!response.ok) throw new Error("Usuário não encontrado.");
+                return response.json();
+            })
+            .then((data) => setUsuario(data))
+            .catch((error) => setErro(error.message));
     }, []);
 
+    // Carregar os comentários
     useEffect(() => {
         fetch(`http://127.0.0.1:5000/api/v0.0.1/comment/user/${user}`)
-        .then((response) => {
-            if (!response.ok) throw new Error("Comentários não encontrados.");
-            return response.json();
-        })
-        .then((data) => setComments(data))
-        .catch((error) => setErro(error.message));
+            .then((response) => {
+                if (!response.ok) throw new Error("Comentários não encontrados.");
+                return response.json();
+            })
+            .then((data) => setComments(data))
+            .catch((error) => setErro(error.message));
     }, []);
 
+    // Carregar postagens e associar categorias
     useEffect(() => {
-        if (comments && comments.length > 0) {
+        if (comments.length > 0) {
+            const postMap = {};
+            const categoriaMap = {};
+
+            // Carregar postagens associadas aos comentários
             comments.forEach((comment) => {
                 fetch(`http://127.0.0.1:5000/api/v0.0.1/post/${comment.postagem_id}`)
                     .then((response) => {
@@ -64,10 +69,20 @@ export default function Comentarios() {
                         return response.json();
                     })
                     .then((data) => {
-                        setPosts((prevPosts) => ({
-                            ...prevPosts,
-                            [comment.postagem_id]: data,
-                        }));
+                        postMap[comment.postagem_id] = data;
+
+                        // Carregar categorias associadas às postagens
+                        fetch(`http://127.0.0.1:5000/api/v0.0.1/category/${data.categoria_id}`)
+                            .then((response) => {
+                                if (!response.ok) throw new Error("Categoria não encontrada.");
+                                return response.json();
+                            })
+                            .then((dataCategoria) => {
+                                categoriaMap[data.categoria_id] = dataCategoria;
+                                setPosts(postMap);
+                                setCategorias(categoriaMap);
+                            })
+                            .catch((error) => setErro(error.message));
                     })
                     .catch((error) => setErro(error.message));
             });
@@ -110,8 +125,10 @@ export default function Comentarios() {
 
     if (erro) return <p>{erro}</p>;
     if (!usuario) return <p>Carregando usuário...</p>;
-    if (!comments) return <p>Carregando comentários...</p>;
-    if (!posts) return <p>Carregando postagens...</p>;
+    if (!comments.length) return <p>Carregando comentários...</p>;
+    if (Object.keys(posts).length === 0 || Object.keys(categorias).length === 0) {
+        return <p>Carregando postagens e categorias...</p>;
+    }
 
     return (
         <div className="container-comments">
@@ -144,7 +161,7 @@ export default function Comentarios() {
                     </button>
                 </div>
             </div>
-            <div className="comentarios" ref={elementRef} >
+            <div className="comentarios" ref={elementRef}>
                 {filteredComments.map((comment) => (
                     <div key={comment.id} className={`comentario comentario${comment.id}`}>
                         <div className="header-comment">
@@ -169,11 +186,25 @@ export default function Comentarios() {
                         <div className="text-comment">
                             <p>{comment.conteudo}</p>
                         </div>
-                        {posts[comment.postagem_id] && (
-                            <div className="post-comment">
-                                <h3>{posts[comment.postagem_id].titulo}</h3>
-                                <img src={"media/upload/posts/" + posts[comment.postagem_id].media} />
-                            </div>
+                        {posts[comment.postagem_id] && categorias[posts[comment.postagem_id].categoria_id] && (
+                            <a
+                                href={`/post/${categorias[posts[comment.postagem_id].categoria_id].nome
+                                    .normalize("NFD")
+                                    .replace(/[\u0300-\u036f]/g, "")
+                                    .replace(/[^a-zA-Z0-9\s]/g, "")
+                                    .replace(/\s+/g, "-")
+                                    .toLowerCase()}/${comment.postagem_id}-${posts[comment.postagem_id].titulo
+                                    .normalize("NFD")
+                                    .replace(/[\u0300-\u036f]/g, "")
+                                    .replace(/[^a-zA-Z0-9\s]/g, "")
+                                    .replace(/\s+/g, "-")
+                                    .toLowerCase()}`}
+                            >
+                                <div className="post-comment">
+                                    <h3>{posts[comment.postagem_id].titulo}</h3>
+                                    <img src={"media/upload/posts/" + posts[comment.postagem_id].media} />
+                                </div>
+                            </a>
                         )}
                     </div>
                 ))}

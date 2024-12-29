@@ -71,6 +71,10 @@
     letter-spacing: 4px;
 }
 
+.tag-post::before {
+    content: ' • ';
+}
+
 .info-text-post {
     padding-top: 20px;
     display: flex;

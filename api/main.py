@@ -52,9 +52,11 @@ class PostModel(db.Model):
     likes = db.Column(db.Integer, default= 0)
     usuario_id = db.Column(db.Integer, db.ForeignKey('user_model.id'), nullable=False)
     usuario = db.relationship('UserModel', backref='posts')
+    categoria_id = db.Column(db.Integer, db.ForeignKey('category_model.id'), nullable=False)
+    categoria = db.relationship('CategoryModel', backref='posts')
 
     def __repr__(self):
-        return f"Post(titulo={self.titulo}, conteudo={self.conteudo}, media={self.media}, views={self.views}, likes={self.likes}, data_postagem={self.data_cadastro}, usuario_id={self.usuario_id})"
+        return f"Post(titulo={self.titulo}, conteudo={self.conteudo}, media={self.media}, views={self.views}, likes={self.likes}, data_postagem={self.data_cadastro}, usuario_id={self.usuario_id}, categoria_id={self.categoria_id})"
 
     def to_dict(self):
         post_data = {
@@ -66,8 +68,23 @@ class PostModel(db.Model):
             'likes': self.likes,
             'data_postagem': self.data_postagem,
             'usuario_id': self.usuario_id,
+            'categoria_id': self.categoria_id,
         }
         return post_data
+
+class CategoryModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.Text, nullable=False)
+
+    def __repr__(self):
+        return f"Category(nome={self.nome})"
+
+    def to_dict(self):
+        category_data = {
+            'id': self.id,
+            'nome': self.nome,
+        }
+        return category_data
 
 class CommentModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -109,6 +126,10 @@ post_put_args.add_argument("titulo", type=str, help="Título é necessário", re
 post_put_args.add_argument("conteudo", type=str, help="Conteúdo é necessário", required=True)
 post_put_args.add_argument("media", type=str, help="URL ou caminho da mídia", required=False)
 post_put_args.add_argument("usuario_id", type=int, help="ID do usuário é necessário", required=True)
+post_put_args.add_argument("categoria_id", type=int, help="ID da postagem é necessária", required=True)
+
+category_put_args = reqparse.RequestParser()
+category_put_args.add_argument("nome", type=str, help="Nome é necessário", required=True)
 
 comment_put_args = reqparse.RequestParser()
 comment_put_args.add_argument("conteudo", type=str, help="Conteúdo é necessário", required=True)
@@ -135,7 +156,13 @@ post_fields = {
     'data_postagem': fields.DateTime,
     'views': fields.Integer,
     'likes': fields.Integer,
-    'usuario_id': fields.Integer
+    'usuario_id': fields.Integer,
+    'categoria_id': fields.Integer
+}
+
+category_fields = {
+    'id': fields.Integer,
+    'nome': fields.String,
 }
 
 comment_fields = {
@@ -245,7 +272,7 @@ class Post(Resource):
     @marshal_with(post_fields)
     def post(self):
         args = post_put_args.parse_args()
-        post = PostModel(titulo=args['titulo'],conteudo=args['conteudo'], media=args['media'], usuario_id=args['usuario_id'])
+        post = PostModel(titulo=args['titulo'],conteudo=args['conteudo'], media=args['media'], usuario_id=args['usuario_id'], categoria_id=args['categoria_id'])
         db.session.add(post)
         db.session.commit()
         return post, 201
@@ -267,14 +294,64 @@ class Post(Resource):
             result.views = data.get('views')
         if data.get('likes'):
             result.likes = data.get('likes')
+        if data.get('categoria_id'):
+            result.categoria_id = data.get('categoria_id')
 
         db.session.commit()
-        return "", 200
+        return result.to_dict(), 200
 
     def delete(self, post_id):
         result = PostModel.query.filter_by(id=post_id).first()
         if not result:
             abort(404, message="Post não encontrado!")
+        
+        db.session.delete(result)
+        db.session.commit()
+        return "", 204
+
+class Category(Resource):
+    @marshal_with(category_fields)
+    def get(self, category_id=None):
+        
+        if category_id :
+            result = CategoryModel.query.filter_by(id=category_id).first()
+        else :
+            result = CategoryModel.query.all()
+
+        if not result:
+            abort(404, message="Categoria não encontrada!")
+            
+        if isinstance(result, list):
+            return [category.to_dict() for category in result]
+        
+        return result.to_dict()
+    
+    @marshal_with(category_fields)
+    def post(self):
+        args = category_put_args.parse_args()
+        category = CategoryModel(nome=args['nome'])
+        db.session.add(category)
+        db.session.commit()
+        return category, 201
+    
+    @marshal_with(category_fields)
+    def put(self, category_id):
+        args = category_put_args.parse_args()
+
+        result = CategoryModel.query.filter_by(id=category_id).first()
+        if not result:
+            abort(404, message="Usuário não encontrado para atualizar!")
+
+        result.nome = args['nome']
+
+        db.session.commit()
+
+        return result.to_dict(), 200
+
+    def delete(self, category_id):
+        result = CategoryModel.query.filter_by(id=category_id).first()
+        if not result:
+            abort(404, message="Categoria não encontrada!")
         
         db.session.delete(result)
         db.session.commit()
@@ -347,6 +424,7 @@ class Comment(Resource):
 api.add_resource(Pong, "/api/v0.0.1/ping")
 api.add_resource(User, "/api/v0.0.1/user", "/api/v0.0.1/user/id/<int:user_id>", "/api/v0.0.1/user/email/<string:user_email>" , "/api/v0.0.1/user/<string:api_key>/<int:user_id>")
 api.add_resource(Post, "/api/v0.0.1/post", "/api/v0.0.1/post/<int:post_id>" , "/api/v0.0.1/post/<string:api_key>/<int:post_id>")
+api.add_resource(Category, "/api/v0.0.1/category", "/api/v0.0.1/category/<int:category_id>")
 api.add_resource(Comment, "/api/v0.0.1/comment", "/api/v0.0.1/comment/<string:type>/<int:id>", "/api/v0.0.1/comment/<string:type>/<int:id>/<int:usuario>")
 
 

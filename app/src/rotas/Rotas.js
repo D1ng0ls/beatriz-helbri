@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, matchPath } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 
 import Index from './../pages/index/Index';
@@ -16,6 +16,8 @@ import PostRedirect from '../pages/post/PostRedirect';
 const Rotas = () => {
   const location = useLocation();
 
+  const isPostPage = matchPath("/post/:categoriaUrl/:title", location.pathname);
+
   React.useEffect(() => {
     if (location.pathname === '/') {
       require('./../pages/index/index.css');
@@ -25,7 +27,7 @@ const Rotas = () => {
       require('./../pages/sobre/sobre.css');
     } else if (location.pathname === '/contato') {
       require('./../pages/contato/contato.css');
-    } else if (location.pathname === '/post/:id') {
+    } else if (isPostPage) {
       require('./../pages/post/post.css');
     } else if (location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/changepassword') {
       require('./../pages/login/login.css');
@@ -48,7 +50,7 @@ const Rotas = () => {
           <Route path="/user" element={<User/>} />
           <Route path="/post" element={<PostRedirect/>} />
           <Route path="/post/:categoria" element={<PostRedirect/>} />
-          <Route path="/post/:categoria/:dia/:mes/:ano/:id/:title" element={<Post/>} />
+          <Route path="/post/:categoriaUrl/:title" element={<Post/>} />
         </Route>
       </Routes>
     </>

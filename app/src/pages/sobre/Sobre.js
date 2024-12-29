@@ -5,7 +5,7 @@ export default function Sobre() {
     const [erro, setErro] = useState(null);
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v0.0.1/user/id/3`).then((response) => {
+        fetch(`http://localhost:5000/api/v0.0.1/user/id/1`).then((response) => {
             if (!response.ok) throw new Error("Usuário não encontrado.");
             return response.json();
         }).then((data) => setUsuario(data)).catch((error) => setErro(error.message));
