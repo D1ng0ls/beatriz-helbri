@@ -13,35 +13,32 @@ export default function SobrePosts() {
             fetch(`http://localhost:5000/api/v0.0.1/user/id/1`).then((response) => response.json()),
             fetch(`http://127.0.0.1:5000/api/v0.0.1/post`).then((response) => response.json())
         ])
-            .then(([usuarioData, postsData]) => {
+            .then(async ([usuarioData, postsData]) => {
                 setUsuario(usuarioData);
                 setPost(postsData);
                 
                 // Agora, pegar categorias e comentários em lote
                 const categoriaRequests = postsData.map((post) =>
-                    fetch(`http://127.0.0.1:5000/api/v0.0.1/category/${post.categoria_id}`).then((response) => response.json())
+                    fetch(`http://127.0.0.1:5000/api/v0.0.1/categoria/${post.categoria_id}`).then((response) => response.json())
                 );
                 const comentarioRequests = postsData.map((post) =>
                     fetch(`http://127.0.0.1:5000/api/v0.0.1/comment/post/${post.id}`).then((response) => response.json())
                 );
 
                 // Esperar todas as requisições de categorias e comentários
-                return Promise.all([...categoriaRequests, ...comentarioRequests]).then((responses) => {
-                    const categoriasMap = {};
-                    const comentariosMap = {};
-                    const categoryResponses = responses.slice(0, categoriaRequests.length);
-                    const commentResponses = responses.slice(categoriaRequests.length);
-
-                    categoryResponses.forEach((categoryData, index) => {
-                        categoriasMap[postsData[index].categoria_id] = categoryData;
-                    });
-                    commentResponses.forEach((commentData, index) => {
-                        comentariosMap[postsData[index].id] = commentData;
-                    });
-
-                    setCategorias(categoriasMap);
-                    setComentarios(comentariosMap);
+                const responses = await Promise.all([...categoriaRequests, ...comentarioRequests]);
+                const categoriasMap = {};
+                const comentariosMap = {};
+                const categoryResponses = responses.slice(0, categoriaRequests.length);
+                const commentResponses = responses.slice(categoriaRequests.length);
+                categoryResponses.forEach((categoryData, index) => {
+                    categoriasMap[postsData[index].categoria_id] = categoryData;
                 });
+                commentResponses.forEach((commentData, index_1) => {
+                    comentariosMap[postsData[index_1].id] = commentData;
+                });
+                setCategorias(categoriasMap);
+                setComentarios(comentariosMap);
             })
             .catch((error) => setErro(error.message));
     }, []);

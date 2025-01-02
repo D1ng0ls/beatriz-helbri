@@ -15,7 +15,7 @@ header {
     content: ' • ';
 }
 
-.container-postagem {
+.container-postagem, .container-recommended {
     width: 60%;
     margin: auto;
     padding: 40px;
@@ -76,7 +76,7 @@ header {
     margin-left: 20px;
 }
 
-.info-text-post{
+.info-text-post, .info-text-post-recommended{
     padding-top: 20px;
     font-size: 1.25rem;
     display: flex;
@@ -86,11 +86,11 @@ header {
     align-items: center;
 }
 
-.info-text-post i {
+.info-text-post i, .info-text-post-recommended i{
     cursor: pointer;
 }
 
-.info-text-post i:nth-child(5) {
+.info-text-post i:nth-child(5), .info-text-post-recommended i:nth-child(5) {
     color: var(--color-red);
     margin-left: auto;
 }
@@ -99,4 +99,58 @@ header {
     vertical-align: middle;
     font-size: 0.9rem;
     margin-left: -25px;
+}
+
+/*recomendados*/
+
+.container-recommended {
+    border: none;
+    padding: 0;
+    margin-top: 40px;
+}
+
+.recommended-posts {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.recommended-posts a {
+    display: contents
+}
+
+.post {
+    width: 25%;
+    border: 1px solid var(--color-black);
+}
+
+.post img {
+    width: 100%;
+}
+
+.post h3 {
+    margin: 20px 0;
+    font-size: 1rem;
+    padding: 0 15px;
+}
+.info-text-post-recommended {
+    margin: 0 15px;
+    padding: 15px 0;
+    font-size: 0.9rem;
+}
+
+.more-posts {
+    width: 15%;
+    background-color: #BB5A3A;
+    color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    border-radius: 4px;
+}
+
+.more-posts i {
+    font-size: 1.5rem;
 }

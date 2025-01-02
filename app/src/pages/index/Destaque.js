@@ -30,7 +30,7 @@ export default function Destaque() {
 
     useEffect(() => {
         if (post && post.length > 0) {
-            fetch(`http://127.0.0.1:5000/api/v0.0.1/category/${post[0].categoria_id}`)
+            fetch(`http://127.0.0.1:5000/api/v0.0.1/categoria/${post[0].categoria_id}`)
                 .then((response) => {
                     if (!response.ok) throw new Error("Categoria não encontrada.");
                     return response.json();

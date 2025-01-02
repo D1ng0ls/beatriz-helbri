@@ -257,17 +257,38 @@ class User(Resource):
 
 class Post(Resource):
     @marshal_with(post_fields)
-    def get(self, post_id=None):
-        if post_id:
-            result = PostModel.query.filter_by(id=post_id).first()
+    def get(self, type=None, id=None):
+        if id and not type:
+            abort(400, message="Tipo é necessário! (id / categoria / usuario)")
+        if type and not id:
+            abort(400, message="Id é necessário! (id_postagem / id_categoria / id_usuario)")
+
+        if type == 'id':
+            result = PostModel.query.filter_by(id=id).first()
             if not result:
                 abort(404, message="Post não encontrado!")
             return result.to_dict()
-
-        posts = PostModel.query.order_by(PostModel.data_postagem.desc()).all()
-        if not posts:
-            abort(404, message="Nenhum post encontrado!")
-        return [post.to_dict() for post in posts]
+        
+        elif type == 'categoria':
+            results = PostModel.query.filter_by(categoria_id=id).order_by(PostModel.data_postagem.desc()).all()
+            if not results:
+                abort(404, message="Nenhum post encontrado")
+            return [post.to_dict() for post in results]
+        
+        elif type == 'usuario':
+            results = PostModel.query.filter_by(usuario_id=id).order_by(PostModel.data_postagem.desc()).all()
+            if not results:
+                abort(404, message="Nenhum post encontrado")
+            return [post.to_dict() for post in results]
+        
+        elif not type :
+            posts = PostModel.query.order_by(PostModel.data_postagem.desc()).all()
+            if not posts:
+                abort(404, message="Nenhum post encontrado!")
+            return [post.to_dict() for post in posts]
+        
+        else :
+            abort(422, message="Tipo inexistente! Tente: (id / categoria / usuario)")
     
     @marshal_with(post_fields)
     def post(self):
@@ -423,8 +444,8 @@ class Comment(Resource):
 #URI API
 api.add_resource(Pong, "/api/v0.0.1/ping")
 api.add_resource(User, "/api/v0.0.1/user", "/api/v0.0.1/user/id/<int:user_id>", "/api/v0.0.1/user/email/<string:user_email>" , "/api/v0.0.1/user/<string:api_key>/<int:user_id>")
-api.add_resource(Post, "/api/v0.0.1/post", "/api/v0.0.1/post/<int:post_id>" , "/api/v0.0.1/post/<string:api_key>/<int:post_id>")
-api.add_resource(Category, "/api/v0.0.1/category", "/api/v0.0.1/category/<int:category_id>")
+api.add_resource(Post, "/api/v0.0.1/post", "/api/v0.0.1/post/<string:type>", "/api/v0.0.1/post/<string:type>/<int:id>", "/api/v0.0.1/post/<string:api_key>/<int:post_id>")
+api.add_resource(Category, "/api/v0.0.1/categoria", "/api/v0.0.1/categoria/<int:category_id>")
 api.add_resource(Comment, "/api/v0.0.1/comment", "/api/v0.0.1/comment/<string:type>/<int:id>", "/api/v0.0.1/comment/<string:type>/<int:id>/<int:usuario>")
 
 

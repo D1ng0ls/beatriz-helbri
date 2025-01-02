@@ -63,7 +63,7 @@ export default function Comentarios() {
 
             // Carregar postagens associadas aos comentários
             comments.forEach((comment) => {
-                fetch(`http://127.0.0.1:5000/api/v0.0.1/post/${comment.postagem_id}`)
+                fetch(`http://127.0.0.1:5000/api/v0.0.1/post/id/${comment.postagem_id}`)
                     .then((response) => {
                         if (!response.ok) throw new Error("Postagem não encontrada.");
                         return response.json();
@@ -72,7 +72,7 @@ export default function Comentarios() {
                         postMap[comment.postagem_id] = data;
 
                         // Carregar categorias associadas às postagens
-                        fetch(`http://127.0.0.1:5000/api/v0.0.1/category/${data.categoria_id}`)
+                        fetch(`http://127.0.0.1:5000/api/v0.0.1/categoria/${data.categoria_id}`)
                             .then((response) => {
                                 if (!response.ok) throw new Error("Categoria não encontrada.");
                                 return response.json();
