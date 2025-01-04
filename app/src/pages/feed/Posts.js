@@ -60,12 +60,12 @@ export default function Posts({ selectedCategories, selectedTime, searchText }) 
                         const response = await fetch(`http://127.0.0.1:5000/api/v0.0.1/categoria/${post.categoria_id}`);
                         if (!response.ok) throw new Error("Categoria não encontrada.");
                         const data = await response.json();
-                        categoriasMap[post.categoria_id] = data;
+                        categoriasMap[post.categoria_id] = data; // Mapeia pela ID da categoria
                     } catch (error) {
                         setErro(error.message);
                     }
                 }
-                setCategoria(categoriasMap);
+                setCategoria(categoriasMap); // Atualiza o estado com o mapa de categorias
             };
             fetchCategorias();
         }
@@ -108,7 +108,7 @@ export default function Posts({ selectedCategories, selectedTime, searchText }) 
         <div className="container-postagem">
             <div className="postagens">
                 {filteredPosts.map((post, index) => (
-                    <a href={`/post/${categoria[post.id]?.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()}/${post.id}-${post.titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()}`}>
+                    <a href={`/post/${categoria[post.categoria_id]?.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()}/${post.id}-${post.titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()}`}>
                         <div className={`post post${index + 1}`} key={post.id}>
                             <div className="img-post">
                                 <img
@@ -125,7 +125,7 @@ export default function Posts({ selectedCategories, selectedTime, searchText }) 
                                             year: "numeric",
                                         })}
                                     </time>
-                                    <span className="tag-post">{categoria[post.id]?.nome}</span>
+                                    <span className="tag-post">{categoria[post.categoria_id]?.nome}</span>
                                 </i>
                                 <h2>{post.titulo}</h2>
                                 <p>{post.conteudo}</p>

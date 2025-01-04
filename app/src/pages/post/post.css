@@ -132,7 +132,15 @@ header {
     margin: 20px 0;
     font-size: 1rem;
     padding: 0 15px;
+    line-height: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
 }
+
 .info-text-post-recommended {
     margin: 0 15px;
     padding: 15px 0;
@@ -149,8 +157,129 @@ header {
     align-items: center;
     gap: 20px;
     border-radius: 4px;
+    min-height: 250px;
 }
 
 .more-posts i {
     font-size: 1.5rem;
+}
+
+
+/*comentarios*/
+.container-comments {
+    width: 60%;
+    margin: 40px auto;
+    display: flex;
+    gap: 40px;
+    flex-direction: column;
+}
+
+.comments-add {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.comments-add img {
+    width: 3rem;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.comments-add label {
+    width: calc(100% - 3rem - 30px);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+} 
+
+.comments-add label input {
+    width: 100%;
+    height: 2rem;
+    font-size: 1rem;
+    border: none;
+    border-bottom: 1px solid var(--color-black);
+    padding-left: 1.5rem;
+}
+
+.comments-add label button {
+    border: none;
+    width: 1rem;
+    padding: 0;
+    position: absolute;
+}
+
+.comments-add label button i {
+    font-size: 1rem;
+}
+
+.comments-post {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment {
+    width: 80%;
+    border: 1px solid var(--color-black);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 30px;
+    margin-bottom: 50px;
+}
+
+.header-comment {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-info-comment {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.text-info-comment {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.text-info-comment time {
+    font-weight: 300;
+    font-size: 0.9rem;
+}
+
+.user-info-comment img {
+    width: 3rem;
+    border-radius: 50%;
+}
+
+.actions-comment {
+    font-size: 1.25rem;
+}
+
+.actions-comment .bi {
+    cursor: pointer;
+}
+
+.comment-body {
+    padding: 10px 20px;
+    line-height: 1.5rem;
+}
+
+.back-to-top {
+    background-color: #BB5A3A;
+    color: var(--color-white);
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 1.5rem;
+    display: inline-block;
+    margin: auto;
+    align-self: center;
 }

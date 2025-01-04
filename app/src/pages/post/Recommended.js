@@ -67,10 +67,12 @@ export default function Recommended() {
                         </div>
                     </a>
                 ))}
-                <div className="more-posts">
-                    <h3>Veja mais!</h3>
-                    <i className="bi bi-arrow-right"></i>
-                </div>
+                <a href={"/feed?categories="+categoria.nome}>
+                    <div className="more-posts">
+                        <h3>Veja mais!</h3>
+                        <i className="bi bi-arrow-right"></i>
+                    </div>
+                </a>
             </div>
         </div>
     );
