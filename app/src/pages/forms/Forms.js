@@ -68,11 +68,12 @@ export default function Forms() {
             <div className="container-forms">
                 <form onSubmit={handleSubmit} method="post">
                     <label id="mediaLabel" form="media">
-                        <div className="add-media">
-                            <i className="bi bi-plus-lg"></i>
-                            <span>Adicionar imagem</span>
-                        </div>
-                        
+                        {!post.media ? (
+                            <div className="add-media">
+                                <i className="bi bi-plus-lg"></i>
+                                <span>Adicionar imagem</span>
+                            </div>
+                        ):''}
                         <input
                             tabIndex={1}
                             type="file"
@@ -103,11 +104,14 @@ export default function Forms() {
                             ))}
                         </select>
                     </label>
-                    <div className="card">
-                        <TextEditor defaultValue={content} onChange={setContent}/>
-                    </div>
+                    {content !== '' && (
+                        <div className="card">
+                            <TextEditor defaultValue={content} onChange={(value) => setContent(value)} />
+                        </div>
+                    )}
+                    <input type="text" name="conteudo" id="conteudo" value={content} disabled='true' hidden='true'/>
                     <div className="buttons">
-                        <button type="reset">Cancelar</button>
+                        <a href="">Cancelar</a>
                         <button type="submit">Publicar</button>
                     </div>
                 </form>

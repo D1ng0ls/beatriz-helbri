@@ -9,7 +9,7 @@ export default class TextEditor extends Component {
     constructor(props) {
         super(props);
 
-        const html = props.value || '';
+        const html = props.defaultValue || '<p></p>';
         const contentBlock = htmlToDraft(html);
         const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
         const editorState = EditorState.createWithContent(contentState);

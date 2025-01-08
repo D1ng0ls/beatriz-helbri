@@ -63,6 +63,57 @@ header {
     border: 1px solid var(--color-black);
     border-radius: 4px;
     padding: 10px 15px;
+    font-family: var(--font-poppins);
+}
+
+.container-forms form label select {
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--color-black) 50%),
+        linear-gradient(135deg, var(--color-black) 50%, transparent 50%),
+        linear-gradient(to right, #ccc, #ccc);
+    background-position:
+        calc(100% - 23px) 1em, /* A posição do primeiro triângulo */
+        calc(100% - 15px) 1em, /* A posição do segundo triângulo */
+        calc(100% - 3em) 0.5em;            /* A posição do terceiro triângulo */
+    background-size:
+        10px 10px, /* Tamanho maior para o primeiro triângulo */
+        10px 10px, /* Tamanho maior para o segundo triângulo */
+        1px 1.75em;   /* Tamanho do terceiro gradiente */
+    background-repeat: no-repeat;
+}
+
+.container-forms form label select {
+    background-color: white;
+    border-radius: 4px;
+    display: inline-block;
+    margin: 0;      
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+.container-forms form label select:focus {
+    background-image:
+        linear-gradient(45deg, var(--color-black) 50%, transparent 50%),
+        linear-gradient(135deg, transparent 50%, var(--color-black) 50%),
+        linear-gradient(to right, #ccc, #ccc);
+    background-position:
+        calc(100% - 15px) 1em,
+        calc(100% - 23px) 1em, /* A posição do primeiro triângulo */
+        calc(100% - 3em) 0.5em; 
+    background-size:
+        10px 10px, /* Tamanho maior para o primeiro triângulo */
+        10px 10px, /* Tamanho maior para o segundo triângulo */
+        1px 1.75em;   /* Tamanho do terceiro gradiente */
+    background-repeat: no-repeat;
+    outline: 0;
+}
+
+select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
 }
 
 .card {
@@ -83,4 +134,32 @@ header {
 .demo-editor a {
     color: #BB5A3A !important;
     text-decoration: underline;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.buttons a {
+    border: 1px solid #BB5A3A;
+    font-size: 1rem;
+    font-family: var(--font-poppins);
+    padding: 10px;
+    color: #BB5A3A;
+    border-radius: 4px;
+}
+
+.buttons button {
+    border: 1px solid #BB5A3A;
+    background-color: #BB5A3A;
+    color: var(--color-white);
+    border-radius: 4px;
+    padding: 5.5px 10px;
+    font-size: 1rem;
+    font-family: var(--font-poppins);
+    cursor: pointer;
 }
