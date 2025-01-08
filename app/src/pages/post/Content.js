@@ -72,47 +72,43 @@ export default function Content() {
     const encodedUrl = `${window.location.href}`;
 
     return (
-        <>
-            {(post.id + "-" + post.titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "-").toLowerCase() === title &&
-                categoria?.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "-").toLowerCase() === categoriaUrl) ? (
-                <div className="container-postagem">
-                    <div className="header-post">
-                        <i>
-                            <time dateTime={post.data_postagem}>
-                                {new Date(post.data_postagem).toLocaleDateString("pt-BR", {
-                                    day: "numeric",
-                                    month: "short",
-                                    year: "numeric",
-                                })}
-                            </time>
-                            <span className="tag-post">{categoria?.nome}</span>
-                        </i>
-                        <i className="bi bi-share" onClick={handleCopy}></i>
-                        <span className={copied ? "aparece" : "desaparece"}>URL Copiada!</span>
-                    </div>
-                    <h1>{post.titulo}</h1>
-                    <img src={"../../media/upload/posts/" + post.media} alt={"Imagem de: " + post.titulo} />
-                    <p>{post.conteudo}</p>
-                    <div className="share-post">
-                        <p>Compartilhar com:
-                            <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`} target="_blank" rel="noopener noreferrer">
-                                <i className="bi bi-facebook"></i>
-                            </a>
-                            <a href={`https://twitter.com/intent/tweet?text=${post.titulo}&url=${encodedUrl}&hashtags=blog,novidade`} target="_blank" rel="noopener noreferrer">
-                                <i className="bi bi-twitter-x"></i>
-                            </a>
-                            <a href={`https://api.whatsapp.com/send?text=${post.titulo}+${encodedUrl}`} target="_blank" rel="noopener noreferrer">
-                                <i className="bi bi-whatsapp"></i>
-                            </a>
-                        </p>
-                    </div>
-                    <div className="info-text-post">
-                        <i className="bi bi-eye"></i><span className="info">{post.views > 999 ? post.views / 1000 + "mil" : post.views}</span>
-                        <i className="bi bi-chat-dots"></i><span className="info">{comments.length || "0"}</span>
-                        <i className="bi bi-heart"></i><span className="info">{post.likes > 999 ? post.likes / 1000 + "mil" : post.likes}</span>
-                    </div>
-                </div>
-            ) : "Postagem não encontrada!"}
-        </>
+        <div className="container-postagem">
+            <div className="header-post">
+                <i>
+                    <time dateTime={post.data_postagem}>
+                        {new Date(post.data_postagem).toLocaleDateString("pt-BR", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                        })}
+                    </time>
+                    <span className="tag-post">{categoria?.nome}</span>
+                </i>
+                <i className="bi bi-share" onClick={handleCopy}></i>
+                <span className={copied ? "aparece" : "desaparece"}>URL Copiada!</span>
+            </div>
+            <h1>{post.titulo}</h1>
+            <img src={"../../media/upload/posts/" + post.media} alt={"Imagem de: " + post.titulo} />
+            <p>{post.conteudo}</p>
+            <div className="share-post">
+                <p>Compartilhar com:
+                    <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`} target="_blank" rel="noopener noreferrer">
+                        <i className="bi bi-facebook"></i>
+                    </a>
+                    <a href={`https://twitter.com/intent/tweet?text=${post.titulo}&url=${encodedUrl}&hashtags=blog,novidade`} target="_blank" rel="noopener noreferrer">
+                        <i className="bi bi-twitter-x"></i>
+                    </a>
+                    <a href={`https://api.whatsapp.com/send?text=${post.titulo}+${encodedUrl}`} target="_blank" rel="noopener noreferrer">
+                        <i className="bi bi-whatsapp"></i>
+                    </a>
+                </p>
+            </div>
+            <div className="info-text-post">
+                <i className="bi bi-eye"></i><span className="info">{post.views > 999 ? post.views / 1000 + "mil" : post.views}</span>
+                <i className="bi bi-chat-dots"></i><span className="info">{comments.length || "0"}</span>
+                <i className="bi bi-heart"></i><span className="info">{post.likes > 999 ? post.likes / 1000 + "mil" : post.likes}</span>
+            </div>
+        </div>
+
     );
 }

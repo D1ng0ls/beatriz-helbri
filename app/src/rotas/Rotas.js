@@ -12,6 +12,7 @@ import ChangePassword from '../pages/login/ChangePassword';
 import User from '../pages/user/User';
 import Post from '../pages/post/Post';
 import PostRedirect from '../pages/post/PostRedirect';
+import Forms from '../pages/forms/Forms';
 
 const Rotas = () => {
   const location = useLocation();
@@ -33,6 +34,8 @@ const Rotas = () => {
       require('./../pages/login/login.css');
     } else if (location.pathname === '/user') {
       require('./../pages/user/user.css');
+    } else if (location.pathname === '/insertpost') {
+      require('./../pages/forms/forms.css');
     }
   }, [location.pathname]);
 
@@ -51,6 +54,7 @@ const Rotas = () => {
           <Route path="/post" element={<PostRedirect/>} />
           <Route path="/post/:categoria" element={<PostRedirect/>} />
           <Route path="/post/:categoriaUrl/:title" element={<Post/>} />
+          <Route path="/insertpost" element={<Forms/>} />
         </Route>
       </Routes>
     </>

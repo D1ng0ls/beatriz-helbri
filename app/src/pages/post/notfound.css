@@ -1,0 +1,29 @@
+.container-notfound {
+    width: 100%;
+    height: calc(100vh - 103px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 60px
+}
+
+.container-notfound h1 {
+    font-size: 4rem;
+}
+
+.container-notfound img {
+    height: 50%;
+    border-radius: 72% 28% 31% 69% / 43% 29% 71% 57%  ;
+}
+
+.container-notfound p {
+    font-size: 1.25rem;
+}
+
+.container-notfound a {
+    background-color: #BB5A3A;
+    color: var(--color-white);
+    padding: 10px 17px;
+    border-radius: 4px;
+}
