@@ -67,7 +67,7 @@ export default function Forms() {
         <main>
             <div className="container-forms">
                 <form onSubmit={handleSubmit} method="post">
-                    <label id="mediaLabel" form="media">
+                    <label id="mediaLabel" form="media" style={{backgroundImage: url('/media/upload/posts/')}}>
                         {!post.media ? (
                             <div className="add-media">
                                 <i className="bi bi-plus-lg"></i>
