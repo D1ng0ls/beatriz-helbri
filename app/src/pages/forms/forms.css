@@ -1,0 +1,86 @@
+html {
+    background-color: var(--color-white);
+}
+
+main {
+    padding-top: 103px;
+    color: var(--color-black);
+}
+
+header {
+    color: var(--color-black);
+}
+
+.container-forms {
+    width: 40%;
+    margin: 100px auto;
+}
+
+.container-forms form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+#mediaLabel {
+    width: 100%;
+    height: 300px;
+    background-color: #BB5A3A;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.add-media {
+    color: white;
+    font-size: 2rem;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+#mediaLabel>input {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    border: none !important;
+    padding: 0  !important;
+}
+
+.container-forms form label {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.container-forms form label input,  .container-forms form label select{
+    font-size: 1rem;
+    border: 1px solid var(--color-black);
+    border-radius: 4px;
+    padding: 10px 15px;
+}
+
+.card {
+    border: 1px solid var(--color-black);
+    border-radius: 4px;
+}
+
+.demo-editor {
+    padding: 0 20px;
+    overflow-y: scroll;
+    height: 250px;
+}
+
+.demo-editor blockquote {
+    border-left: 4px solid #BB5A3A !important;
+}
+
+.demo-editor a {
+    color: #BB5A3A !important;
+    text-decoration: underline;
+}
