@@ -7,12 +7,22 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
 from flask_cors import CORS
 import uuid
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///database/user.db"
 db = SQLAlchemy(app)
+
+UPLOAD_FOLDER_POST = './../app/public/media/upload/posts'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp'}
+app.config['UPLOAD_FOLDER_POST'] = UPLOAD_FOLDER_POST
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 #Models
 class UserModel(db.Model):
@@ -293,33 +303,63 @@ class Post(Resource):
     @marshal_with(post_fields)
     def post(self):
         args = post_put_args.parse_args()
-        post = PostModel(titulo=args['titulo'],conteudo=args['conteudo'], media=args['media'], usuario_id=args['usuario_id'], categoria_id=args['categoria_id'])
-        db.session.add(post)
-        db.session.commit()
-        return post, 201
+        file = request.files.get('media')
+        
+        if file and allowed_file(file.filename):
+            random_filename = str(uuid.uuid4())
+            extension = file.filename.rsplit('.', 1)[1].lower()
+            filename = f"{random_filename}.{extension}"
+            file.save(os.path.join(app.config['UPLOAD_FOLDER_POST'], filename))
+            
+            post = PostModel(
+                titulo=args['titulo'],
+                conteudo=args['conteudo'],
+                media=filename,
+                usuario_id=args['usuario_id'],
+                categoria_id=args['categoria_id']
+            )
+            db.session.add(post)
+            db.session.commit()
+
+            return post.to_dict(), 201
+
+        abort(400, message="Arquivo inválido ou não enviado.")
     
     @marshal_with(post_fields)
     def put(self, post_id):
-        data = request.get_json()
-        result = PostModel.query.filter_by(id=post_id).first()
-        if not result:
+        args = post_put_args.parse_args()
+        file = request.files.get('media')
+        
+        # Verifica se o post existe
+        post = PostModel.query.filter_by(id=post_id).first()
+
+        if not post:
             abort(404, message="Post não encontrado!")
 
-        if data.get('titulo'):
-            result.titulo = data.get('titulo')
-        if data.get('conteudo'):
-            result.conteudo = data.get('conteudo')
-        if data.get('media'):
-            result.media = data.get('media')
-        if data.get('views'):
-            result.views = data.get('views')
-        if data.get('likes'):
-            result.likes = data.get('likes')
-        if data.get('categoria_id'):
-            result.categoria_id = data.get('categoria_id')
-
+        # Atualiza os campos do post com os novos valores
+        if args['titulo']:
+            post.titulo = args['titulo']
+        if args['conteudo']:
+            post.conteudo = args['conteudo']
+        if args['usuario_id']:
+            post.usuario_id = args['usuario_id']
+        if args['categoria_id']:
+            post.categoria_id = args['categoria_id']
+        
+        # Verifica e salva o novo arquivo de mídia, se enviado
+        if file and allowed_file(file.filename):
+            random_filename = str(uuid.uuid4())
+            extension = file.filename.rsplit('.', 1)[1].lower()
+            filename = f"{random_filename}.{extension}"
+            file.save(os.path.join(app.config['UPLOAD_FOLDER_POST'], filename))
+            post.media = filename
+        elif 'media' in args:
+            post.media = None
+    
+        # Commit das alterações no banco de dados
         db.session.commit()
-        return result.to_dict(), 200
+
+        return post.to_dict(), 200
 
     def delete(self, post_id):
         result = PostModel.query.filter_by(id=post_id).first()
@@ -444,7 +484,7 @@ class Comment(Resource):
 #URI API
 api.add_resource(Pong, "/api/v0.0.1/ping")
 api.add_resource(User, "/api/v0.0.1/user", "/api/v0.0.1/user/id/<int:user_id>", "/api/v0.0.1/user/email/<string:user_email>" , "/api/v0.0.1/user/<string:api_key>/<int:user_id>")
-api.add_resource(Post, "/api/v0.0.1/post", "/api/v0.0.1/post/<string:type>", "/api/v0.0.1/post/<string:type>/<int:id>", "/api/v0.0.1/post/<string:api_key>/<int:post_id>")
+api.add_resource(Post, "/api/v0.0.1/post", "/api/v0.0.1/post/<string:type>", "/api/v0.0.1/post/<string:type>/<int:id>", "/api/v0.0.1/post/<int:post_id>")
 api.add_resource(Category, "/api/v0.0.1/categoria", "/api/v0.0.1/categoria/<int:category_id>")
 api.add_resource(Comment, "/api/v0.0.1/comment", "/api/v0.0.1/comment/<string:type>/<int:id>", "/api/v0.0.1/comment/<string:type>/<int:id>/<int:usuario>")
 
