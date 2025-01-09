@@ -38,7 +38,7 @@
 }
 
 .img-post {
-    max-height: 250px;
+    max-height: 200px;
     overflow: hidden;
 }
 
@@ -64,6 +64,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    min-height: 4.5rem;
 }
 
 .text-post i {

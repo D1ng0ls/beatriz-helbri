@@ -202,7 +202,7 @@ export default function Comentarios() {
                             >
                                 <div className="post-comment">
                                     <h3>{posts[comment.postagem_id].titulo}</h3>
-                                    <img src={"media/upload/posts/" + posts[comment.postagem_id].media} />
+                                    <img src={"media/upload/posts/" + posts[comment.postagem_id].media} alt={"Imagem de: " + posts[comment.postagem_id].titulo} />
                                 </div>
                             </a>
                         )}

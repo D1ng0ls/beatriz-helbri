@@ -82,7 +82,7 @@ export default function SobrePosts() {
                                     <span className="tag-postagem">{categorias[post.categoria_id]?.nome}</span>
                                 </i>
                                 <h2>{post.titulo}</h2>
-                                <p>{post.conteudo}</p>
+                                <p dangerouslySetInnerHTML={{ __html:post.conteudo}}></p>
                                 <div className="info-text-postagem">
                                     <i className="bi bi-eye"></i>
                                     <span className="info">{post.views > 999 ? post.views / 1000 + "mil" : post.views}</span>

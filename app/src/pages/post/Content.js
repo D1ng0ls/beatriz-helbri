@@ -14,32 +14,25 @@ export default function Content() {
 
     useEffect(() => {
         if (!id) return;
-
+    
         const fetchData = async () => {
             try {
                 setCarregando(true);
-
+    
                 // Fetch Post
-                const cachedPost = localStorage.getItem(`post_${id}`);
-                const postResponse = cachedPost
-                    ? JSON.parse(cachedPost)
-                    : await fetch(`http://127.0.0.1:5000/api/v0.0.1/post/id/${id}`).then((res) => {
-                          if (!res.ok) throw new Error("Postagem não encontrada.");
-                          return res.json();
-                      });
-
-                if (!cachedPost) {
-                    localStorage.setItem(`post_${id}`, JSON.stringify(postResponse));
-                }
+                const postResponse = await fetch(`http://127.0.0.1:5000/api/v0.0.1/post/id/${id}`).then((res) => {
+                    if (!res.ok) throw new Error("Postagem não encontrada.");
+                    return res.json();
+                });
                 setPost(postResponse);
-
+    
                 // Fetch Comments
                 const commentsResponse = await fetch(`http://127.0.0.1:5000/api/v0.0.1/comment/post/${id}`).then((res) => {
                     if (!res.ok) throw new Error("Comentários não encontrados.");
                     return res.json();
                 });
                 setComments(commentsResponse);
-
+    
                 // Fetch Categoria
                 const categoriaResponse = await fetch(`http://127.0.0.1:5000/api/v0.0.1/categoria/${postResponse.categoria_id}`).then((res) => {
                     if (!res.ok) throw new Error("Categoria não encontrada.");
@@ -52,7 +45,7 @@ export default function Content() {
                 setCarregando(false);
             }
         };
-
+    
         fetchData();
     }, [id]);
 
@@ -89,7 +82,7 @@ export default function Content() {
             </div>
             <h1>{post.titulo}</h1>
             <img src={"../../media/upload/posts/" + post.media} alt={"Imagem de: " + post.titulo} />
-            <p>{post.conteudo}</p>
+            <p dangerouslySetInnerHTML={{ __html:post.conteudo}}></p>
             <div className="share-post">
                 <p>Compartilhar com:
                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`} target="_blank" rel="noopener noreferrer">

@@ -64,7 +64,7 @@ export default function Destaque() {
                     <div className="text-destaque">
                         <i><time dateTime={post[0].data_postagem}>{formatDate(post[0].data_postagem)}</time> <span className="tag-postagem">{categoria.nome}</span></i>
                         <h2>{post[0].titulo}</h2>
-                        <p>{post[0].conteudo}</p>
+                        <p dangerouslySetInnerHTML={{ __html:post[0].conteudo}}></p>
                         <div className="info-text-destaque">
                             <i className="bi bi-eye"></i><span className="info">{post[0].views>999 ? post[0].views/1000 + "mil" : post[0].views}</span>
                             <i className="bi bi-chat-dots"></i><span className="info">{comment.length || '0'}</span>

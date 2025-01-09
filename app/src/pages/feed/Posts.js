@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import htmlToDraft from 'html-to-draftjs';
 
 export default function Posts({ selectedCategories, selectedTime, searchText }) {
     const [posts, setPosts] = useState([]);
@@ -102,7 +103,7 @@ export default function Posts({ selectedCategories, selectedTime, searchText }) 
         });
 
     if (erro) return <p>{erro}</p>;
-    if (!posts.length) return <p>Carregando...</p>;
+    if (!posts.length || !categoria) return <p>Carregando...</p>;
 
     return (
         <div className="container-postagem">
@@ -128,7 +129,7 @@ export default function Posts({ selectedCategories, selectedTime, searchText }) 
                                     <span className="tag-post">{categoria[post.categoria_id]?.nome}</span>
                                 </i>
                                 <h2>{post.titulo}</h2>
-                                <p>{post.conteudo}</p>
+                                <p dangerouslySetInnerHTML={{ __html:post.conteudo}}></p>
                                 <div className="info-text-post">
                                     <i className="bi bi-eye"></i><span className="info">{post.views>999 ? post.views/1000 + "mil" : post.views}</span>
                                     <i className="bi bi-chat-dots"></i><span className="info">{comentarios[post.id] || 0}</span>

@@ -22,7 +22,6 @@ export default function Post() {
                 try {
                     setCarregando(true);
     
-                    // Fetch Post
                     const cachedPost = localStorage.getItem(`post_${id}`);
                     const postResponse = cachedPost
                         ? JSON.parse(cachedPost)
@@ -36,7 +35,6 @@ export default function Post() {
                     }
                     setPost(postResponse);
     
-                    // Fetch Categoria
                     const categoriaResponse = await fetch(`http://127.0.0.1:5000/api/v0.0.1/categoria/${postResponse.categoria_id}`).then((res) => {
                         if (!res.ok) throw new Error("Categoria não encontrada.");
                         return res.json();
@@ -53,11 +51,12 @@ export default function Post() {
         }, [id]);
 
         if (erro) return <p>{erro}</p>;
-        if (carregando || !post || !categoria) return <p>Carregando...</p>;
+        if (!id) return <main><NotFound/></main>
+        if (carregando) return <p>Carregando...</p>;
 
     return (
         <main>
-            {(post.id + "-" + post.titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "-").toLowerCase() === title &&
+            {!id || (post.id + "-" + post.titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "-").toLowerCase() === title &&
                 categoria?.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "-").toLowerCase() === categoriaUrl) ? (
             <>    
                 <Content/>

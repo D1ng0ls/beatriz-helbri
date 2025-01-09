@@ -119,8 +119,6 @@ export default function Forms() {
                     setSuccessMessage(edit ? "Post atualizado com sucesso!" : "Post criado com sucesso!");
                     setIsLoading(false);
                     console.log(edit ? "Post atualizado com sucesso:" : "Post criado com sucesso:", data);
-
-                    navigate("/post/"+categorias[data.categoria_id-1].nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "-").toLowerCase() +"/"+ data.id + "-" + data.titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "-").toLowerCase());
                 })
                 .catch((error) => {
                     setErro(error.message);
@@ -149,8 +147,6 @@ export default function Forms() {
                     setSuccessMessage(edit ? "Post atualizado com sucesso!" : "Post criado com sucesso!");
                     setIsLoading(false);
                     console.log(edit ? "Post atualizado com sucesso:" : "Post criado com sucesso:", data);
-
-                    navigate("/post/"+categorias[data.categoria_id-1].nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "-").toLowerCase() +"/"+ data.id + "-" + data.titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "-").toLowerCase());
                 })
                 .catch((error) => {
                     setErro(error.message);
