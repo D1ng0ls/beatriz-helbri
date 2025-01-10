@@ -8,7 +8,6 @@ export default function SobrePosts() {
     const [erro, setErro] = useState(null);
 
     useEffect(() => {
-        // Buscar informações do usuário e dos posts de uma vez
         Promise.all([
             fetch(`http://localhost:5000/api/v0.0.1/user/id/1`).then((response) => response.json()),
             fetch(`http://127.0.0.1:5000/api/v0.0.1/post`).then((response) => response.json())
@@ -17,7 +16,6 @@ export default function SobrePosts() {
                 setUsuario(usuarioData);
                 setPost(postsData);
                 
-                // Agora, pegar categorias e comentários em lote
                 const categoriaRequests = postsData.map((post) =>
                     fetch(`http://127.0.0.1:5000/api/v0.0.1/categoria/${post.categoria_id}`).then((response) => response.json())
                 );
@@ -25,7 +23,6 @@ export default function SobrePosts() {
                     fetch(`http://127.0.0.1:5000/api/v0.0.1/comment/post/${post.id}`).then((response) => response.json())
                 );
 
-                // Esperar todas as requisições de categorias e comentários
                 const responses = await Promise.all([...categoriaRequests, ...comentarioRequests]);
                 const categoriasMap = {};
                 const comentariosMap = {};

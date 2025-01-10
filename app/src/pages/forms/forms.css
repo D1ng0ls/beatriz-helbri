@@ -140,7 +140,7 @@ select:-moz-focusring {
 }
 
 .demo-editor {
-    padding: 0 20px;
+    padding: 0 10px;
     overflow-y: scroll;
     height: 250px;
     line-height: 1.5rem;
@@ -148,11 +148,50 @@ select:-moz-focusring {
 
 .demo-editor blockquote {
     border-left: 4px solid #BB5A3A !important;
+    padding: 5px;
+    margin: 10px 0;
+    background-color: #bb5a3a1e;
+    display: inline-block;
+}
+
+.public-DraftStyleDefault-block {
+    margin: 0;
 }
 
 .demo-editor a {
     color: #BB5A3A !important;
     text-decoration: underline;
+}
+
+.action-categoria {
+    margin: 20px 0 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.action-categoria .bi {
+    font-size: 1rem;
+    text-decoration: underline;
+    color: #BB5A3A;
+    cursor: pointer;
+}
+
+.action-categoria .bi-trash {
+    color: var(--color-red);
+}
+
+.add-categoria {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+.add-categoria input {
+    padding: 5.5px 10px !important;
+    width: calc(100% - 120px);
 }
 
 .buttons {
@@ -172,7 +211,7 @@ select:-moz-focusring {
     border-radius: 4px;
 }
 
-.buttons button {
+.buttons button, .add-categoria button {
     border: 1px solid #BB5A3A;
     background-color: #BB5A3A;
     color: var(--color-white);
@@ -181,6 +220,11 @@ select:-moz-focusring {
     font-size: 1rem;
     font-family: var(--font-poppins);
     cursor: pointer;
+}
+
+#delete-btn {
+    background-color: var(--color-red);
+    border-color: var(--color-red);
 }
 
 .successMessage {

@@ -62,7 +62,7 @@ class PostModel(db.Model):
     likes = db.Column(db.Integer, default= 0)
     usuario_id = db.Column(db.Integer, db.ForeignKey('user_model.id'), nullable=False)
     usuario = db.relationship('UserModel', backref='posts')
-    categoria_id = db.Column(db.Integer, db.ForeignKey('category_model.id'), nullable=False)
+    categoria_id = db.Column(db.Integer, db.ForeignKey('category_model.id'), nullable=False )
     categoria = db.relationship('CategoryModel', backref='posts')
 
     def __repr__(self):
@@ -137,6 +137,8 @@ post_put_args.add_argument("conteudo", type=str, help="Conteúdo é necessário"
 post_put_args.add_argument("media", type=str, help="URL ou caminho da mídia", required=False)
 post_put_args.add_argument("usuario_id", type=int, help="ID do usuário é necessário", required=True)
 post_put_args.add_argument("categoria_id", type=int, help="ID da postagem é necessária", required=True)
+post_put_args.add_argument("views", type=int, help="Views não é obrigatória", required=False)
+post_put_args.add_argument("likes", type=int, help="Likes não é obrigatório", required=False)
 
 category_put_args = reqparse.RequestParser()
 category_put_args.add_argument("nome", type=str, help="Nome é necessário", required=True)
@@ -328,35 +330,28 @@ class Post(Resource):
     @marshal_with(post_fields)
     def put(self, post_id):
         args = post_put_args.parse_args()
-        file = request.files.get('media')
-        
-        # Verifica se o post existe
         post = PostModel.query.filter_by(id=post_id).first()
 
         if not post:
-            abort(404, message="Post não encontrado!")
+            abort(404, message="Post não encontrado.")
 
-        # Atualiza os campos do post com os novos valores
-        if args['titulo']:
-            post.titulo = args['titulo']
-        if args['conteudo']:
-            post.conteudo = args['conteudo']
-        if args['usuario_id']:
-            post.usuario_id = args['usuario_id']
-        if args['categoria_id']:
-            post.categoria_id = args['categoria_id']
-        
-        # Verifica e salva o novo arquivo de mídia, se enviado
+        post.titulo = args['titulo']
+        post.conteudo = args['conteudo']
+        post.usuario_id = args['usuario_id']
+        post.categoria_id = args['categoria_id']
+        post.views = args['views']
+        post.likes = args['likes']
+
+        file = request.files.get('media')
+
         if file and allowed_file(file.filename):
             random_filename = str(uuid.uuid4())
             extension = file.filename.rsplit('.', 1)[1].lower()
             filename = f"{random_filename}.{extension}"
             file.save(os.path.join(app.config['UPLOAD_FOLDER_POST'], filename))
+
             post.media = filename
-        elif 'media' in args:
-            post.media = None
-    
-        # Commit das alterações no banco de dados
+
         db.session.commit()
 
         return post.to_dict(), 200
@@ -365,10 +360,19 @@ class Post(Resource):
         result = PostModel.query.filter_by(id=post_id).first()
         if not result:
             abort(404, message="Post não encontrado!")
+
+        comments = CommentModel.query.filter_by(postagem_id=post_id).all()
         
+        for comment in comments:
+            db.session.delete(comment)
+            db.session.commit()
+        
+        db.session.commit()
+
         db.session.delete(result)
         db.session.commit()
-        return "", 204
+
+        return {"message": "Post deletado com sucesso!"}, 200
 
 class Category(Resource):
     @marshal_with(category_fields)

@@ -11,6 +11,8 @@ export default function Forms() {
     const [isLoading, setIsLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [mediaPreview, setMediaPreview] = useState(null);
+    const [novaCategoria, setNovaCategoria] = useState("");
+    const [isAddingCategory, setIsAddingCategory] = useState(false);
 
     const query = new URLSearchParams(useLocation().search);
     const edit = query.get("edit");
@@ -84,23 +86,23 @@ export default function Forms() {
     const postData = (e) => {
         e.preventDefault();
         setIsLoading(true);
-
+    
         const method = edit ? "PUT" : "POST";
         const url = edit
             ? `http://localhost:5000/api/v0.0.1/post/${edit}`
             : "http://localhost:5000/api/v0.0.1/post";
-
+    
         let requestBody;
-
-        // Se a mídia não foi alterada, envia dados como JSON
-        if (formData.media === post.media || !formData.media) {
+    
+        if (!formData.media && post.media) {
             requestBody = {
                 titulo: formData.titulo,
                 conteudo: content,
                 usuario_id: userId,
                 categoria_id: formData.categoria_id,
+                media: post.media,
             };
-
+    
             fetch(url, {
                 method: method,
                 headers: {
@@ -130,8 +132,13 @@ export default function Forms() {
             formDataToSend.append('conteudo', content);
             formDataToSend.append('usuario_id', userId);
             formDataToSend.append('categoria_id', formData.categoria_id);
-            formDataToSend.append('media', formData.media);
-
+            
+            if (formData.media) {
+                formDataToSend.append('media', formData.media);
+            } else {
+                formDataToSend.append('media', 'keep');
+            }
+    
             fetch(url, {
                 method: method,
                 body: formDataToSend,
@@ -154,6 +161,84 @@ export default function Forms() {
                 });
         }
     };
+
+    const handleDeletePost = () => {
+        if (window.confirm("Tem certeza que deseja excluir esta publicação?")) {
+            fetch(`http://localhost:5000/api/v0.0.1/post/${edit}`, {
+                method: "DELETE",
+            })
+            .then((response) => {
+                if (!response.ok) throw new Error("Falha ao excluir postagem.");
+                return response.json();
+            })
+            .then(() => {
+                setSuccessMessage("Postagem excluída com sucesso!");
+                navigate(`/insertpost`);
+                window.location.reload();
+            })
+            .catch((error) => {
+                setErro(error.message);   
+            });
+        }
+    };
+
+    const handleAddCategory = () => {
+        if (novaCategoria.trim() === "") {
+            setErro("O nome da categoria não pode estar vazio.");
+            return;
+        }
+
+        fetch("http://localhost:5000/api/v0.0.1/categoria", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ nome: novaCategoria }),
+        })
+        .then((response) => {
+            if (!response.ok) throw new Error("Falha ao adicionar categoria.");
+            return response.json();
+        })
+        .then((data) => {
+            setCategorias((prev) => [...prev, data]);
+            setIsAddingCategory(false);
+            setNovaCategoria("");
+        })
+        .catch((error) => setErro(error.message));
+    };
+
+    const handleDeleteCategory = () => {
+        if (!formData.categoria_id) {
+            setErro("Selecione uma categoria para deletar.");
+            return;
+        }
+
+        if (window.confirm("Tem certeza que deseja excluir esta categoria?")) {
+            fetch(`http://localhost:5000/api/v0.0.1/categoria/${formData.categoria_id}`, {
+                method: "DELETE",
+            })
+            .then((response) => {
+                if (!response.ok) throw new Error("Falha ao excluir categoria.");
+                return response.json();
+            })
+            .then(() => {
+                setCategorias((prev) => prev.filter((categoria) => categoria.id !== formData.categoria_id));
+                setFormData((prevData) => ({
+                    ...prevData,
+                    categoria_id: "",
+                }));
+                setErro(null);
+                setSuccessMessage("Categoria excluída com sucesso!");
+            })
+            .catch((error) => {
+                setErro(error.message);
+            });
+        }
+    };
+
+    if (loading && erro) {
+        navigate(`/insertpost`);
+    }
 
     return (
         <main>
@@ -190,7 +275,7 @@ export default function Forms() {
                         />
                     </label>
 
-                    <label form="titulo">
+                    <label from="titulo">
                         Título
                         <input
                             tabIndex={2}
@@ -202,7 +287,7 @@ export default function Forms() {
                         />
                     </label>
 
-                    <label form="categoria">
+                    <label from="categoria">
                         Categoria
                         <select
                             tabIndex={3}
@@ -220,6 +305,27 @@ export default function Forms() {
                                 </option>
                             ))}
                         </select>
+                        <div className="action-categoria">
+                            <i className="bi bi-plus-lg" onClick={() => setIsAddingCategory(!isAddingCategory)}>
+                                Adicionar categoria
+                            </i>
+                            <i className="bi bi-trash" onClick={handleDeleteCategory}>
+                                Deletar categoria selecionada
+                            </i>
+                        </div>
+                        {isAddingCategory && (
+                            <div className="add-categoria">
+                                <input
+                                    type="text"
+                                    value={novaCategoria}
+                                    onChange={(e) => setNovaCategoria(e.target.value)}
+                                    placeholder="Digite o nome da nova categoria"
+                                />
+                                <button type="button" onClick={handleAddCategory}>
+                                    Adicionar
+                                </button>
+                            </div>
+                        )}
                     </label>
 
                     <div className="card">
@@ -230,7 +336,12 @@ export default function Forms() {
 
                     <div className="buttons">
                         <a href="/">Cancelar</a>
-                        <button type="submit">{isLoading ? "Publicando..." : "Publicar"}</button>
+                        <button type="submit">{isLoading ? "Publicando..." : edit ? "Salvar" : "Publicar"}</button>
+                        {edit ? (
+                            <button id="delete-btn" type="button" onClick={handleDeletePost}>
+                                Deletar
+                            </button>
+                        ) : "" }
                     </div>
                 </form>
 

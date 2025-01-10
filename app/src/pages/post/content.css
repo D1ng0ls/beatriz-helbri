@@ -26,6 +26,18 @@
     font-size: 1.25rem;
 }
 
+.text-post {
+    line-height: 1.5rem;
+}
+
+.text-post blockquote {
+    border-left: 4px solid #BB5A3A !important;
+    padding: 5px;
+    margin: 10px 0;
+    background-color: #bb5a3a1e;
+    display: inline-block;
+}
+
 .desaparece {
     display: none;
 }

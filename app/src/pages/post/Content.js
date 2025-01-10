@@ -19,21 +19,18 @@ export default function Content() {
             try {
                 setCarregando(true);
     
-                // Fetch Post
                 const postResponse = await fetch(`http://127.0.0.1:5000/api/v0.0.1/post/id/${id}`).then((res) => {
                     if (!res.ok) throw new Error("Postagem não encontrada.");
                     return res.json();
                 });
                 setPost(postResponse);
     
-                // Fetch Comments
                 const commentsResponse = await fetch(`http://127.0.0.1:5000/api/v0.0.1/comment/post/${id}`).then((res) => {
                     if (!res.ok) throw new Error("Comentários não encontrados.");
                     return res.json();
                 });
                 setComments(commentsResponse);
     
-                // Fetch Categoria
                 const categoriaResponse = await fetch(`http://127.0.0.1:5000/api/v0.0.1/categoria/${postResponse.categoria_id}`).then((res) => {
                     if (!res.ok) throw new Error("Categoria não encontrada.");
                     return res.json();
@@ -59,6 +56,9 @@ export default function Content() {
             .catch((error) => console.error("Erro ao copiar a URL: ", error));
     };
 
+    
+    
+
     if (erro) return <p>{erro}</p>;
     if (carregando || !post || !categoria) return <p>Carregando...</p>;
 
@@ -82,7 +82,7 @@ export default function Content() {
             </div>
             <h1>{post.titulo}</h1>
             <img src={"../../media/upload/posts/" + post.media} alt={"Imagem de: " + post.titulo} />
-            <p dangerouslySetInnerHTML={{ __html:post.conteudo}}></p>
+            <div className="text-post" dangerouslySetInnerHTML={{ __html:post.conteudo}}></div>
             <div className="share-post">
                 <p>Compartilhar com:
                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`} target="_blank" rel="noopener noreferrer">
