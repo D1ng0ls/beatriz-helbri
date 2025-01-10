@@ -13,9 +13,7 @@ export default function Feed() {
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        const categoriesFromUrl = searchParams.get("categories") 
-            ? searchParams.get("categories").split(",") 
-            : [];
+        const categoriesFromUrl = searchParams.get("categoria");
         
         const timeFromUrl = searchParams.get("time") || "recentes";
         const searchTextFromUrl = searchParams.get("searchText") || "";
@@ -41,7 +39,7 @@ export default function Feed() {
             <Posts
                 selectedCategories={filters.categories}
                 selectedTime={filters.time}
-                searchText={filters.searchText} // Passa o texto de pesquisa
+                searchText={filters.searchText}
             />
         </main>
     );

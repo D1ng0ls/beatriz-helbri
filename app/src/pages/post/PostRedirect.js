@@ -8,7 +8,7 @@ export default function PostRedirect() {
 
     useEffect(() => {
     if (categoria) {
-        navigate("/feed?categories="+categoria);
+        navigate("/feed?categoria="+categoria);
     } else {
         navigate("/feed");
     }

@@ -99,3 +99,9 @@
     font-size: 0.9rem;
     margin-left: -15px;
 }
+
+.not-found {
+    color: var(--color-red);
+    text-align: center;
+    margin-bottom: 50px;
+}

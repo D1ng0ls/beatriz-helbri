@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function Buscar({ onFilterChange }) {
     const [buscarFixed, setBuscarFixed] = useState(false);
@@ -6,6 +7,17 @@ export default function Buscar({ onFilterChange }) {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedTime, setSelectedTime] = useState("recentes");
     const [searchText, setSearchText] = useState("");
+    const [categorias ,setCategorias] = useState([])
+    const [erro ,setErro] = useState(null)
+
+    const navigate = useNavigate();
+
+    const [searchParams] = useSearchParams();
+    const categoriesFromUrl = searchParams.get("categoria")?.normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9\s]/g, "")
+    .replace(/\s+/g, "-")
+    .toLowerCase();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -16,6 +28,16 @@ export default function Buscar({ onFilterChange }) {
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
+    }, []);
+
+    useEffect(() => {
+        fetch(`http://127.0.0.1:5000/api/v0.0.1/categoria`)
+            .then((response) => {
+                if (!response.ok) throw new Error("Categorias não encontradas.");
+                return response.json();
+            })
+            .then((data) => setCategorias(data))
+            .catch((error) => setErro(error.message));
     }, []);
 
     const toggleFilter = () => {
@@ -38,14 +60,15 @@ export default function Buscar({ onFilterChange }) {
     };
 
     const applyFilter = () => {
-    onFilterChange(selectedCategories, selectedTime);  // Passa os filtros para o componente de posts
+        onFilterChange(selectedCategories, selectedTime);
     }
 
-    // Atualiza o texto de busca
     const handleSearchChange = (e) => {
         setSearchText(e.target.value);
-        onFilterChange(selectedCategories, selectedTime, e.target.value); // Passa o texto de busca
+        onFilterChange(selectedCategories, selectedTime, searchText);
     };
+
+    if (erro) return <p>{erro}</p>;
 
     return (
         <div className={`container-buscar ${buscarFixed ? "fixed" : ""}`}>
@@ -58,7 +81,7 @@ export default function Buscar({ onFilterChange }) {
                         maxLength={40}
                         placeholder="Buscar"
                         value={searchText}
-                        onChange={handleSearchChange} // Atualiza o texto em tempo real
+                        onChange={handleSearchChange}
                     />
                 </div>
                 <div className="filter-buscar">
@@ -73,15 +96,19 @@ export default function Buscar({ onFilterChange }) {
                     <div className="tema-filter type-filter">
                         <span>Categorias:</span>
                         <div className="inputs-filter">
-                            {["viagens", "arte", "cultura", "diadia", "opiniao", "saude"].map((category) => (
-                                <div className="cat" key={category}>
+                            {categorias.map((categoria) => (
+                                <div className="cat" key={categoria.id}>
                                     <label>
                                         <input
                                             type="checkbox"
-                                            value={category}
+                                            value={categoria.nome.normalize("NFD")
+                                                .replace(/[\u0300-\u036f]/g, "")
+                                                .replace(/[^a-zA-Z0-9\s]/g, "")
+                                                .replace(/\s+/g, "-")
+                                                .toLowerCase()}
                                             onChange={handleCategoryChange}
                                         />
-                                        <span>{category.charAt(0).toUpperCase() + category.slice(1)}</span>
+                                        <span>{categoria.nome}</span>
                                     </label>
                                 </div>
                             ))}
