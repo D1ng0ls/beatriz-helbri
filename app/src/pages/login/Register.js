@@ -19,8 +19,6 @@ export default function Register() {
         if (senha.length < 8) return setErro("A senha deve ter no mínimo 8 caracteres.");
         if (senha !== confirmSenha) return setErro("As senhas não coincidem.");
 
-        0
-
         if(!user) {
             fetch("http://localhost:5000/api/v0.0.1/user", {
                 method: "POST",
