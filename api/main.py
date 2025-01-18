@@ -17,9 +17,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///database/user.db"
 db = SQLAlchemy(app)
 
 UPLOAD_FOLDER_POST = './../app/public/media/upload/posts'
+UPLOAD_FOLDER_USER = './../app/public/media/upload/users'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp'}
 app.config['UPLOAD_FOLDER_POST'] = UPLOAD_FOLDER_POST
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['UPLOAD_FOLDER_USER'] = UPLOAD_FOLDER_USER
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
