@@ -115,13 +115,37 @@ export default function Comentarios() {
                 const dateB = new Date(b.data_comentario);
 
                 if (filter === "recentes") {
-                    return dateB - dateA; // Mais recentes primeiro
+                    return dateB - dateA;
                 } else if (filter === "antigos") {
-                    return dateA - dateB; // Mais antigos primeiro
+                    return dateA - dateB;
                 }
                 return 0;
             })
         : [];
+    
+    const handleDeleteComment = (comment_id) => {
+        if (!comment_id) {
+            setErro("Nenhum comentário para deletar.");
+            return;
+        }
+
+        if (window.confirm("Tem certeza que deseja excluir o comentário?")) {
+            fetch(`http://localhost:5000/api/v0.0.1/comment/${comment_id}`, {
+                method: "DELETE",
+            })
+            .then((response) => {
+                if (!response.ok) throw new Error("Falha ao excluir o comentário.");
+                return response.json();
+            })
+            .then(() => {
+                setComments((prev) => prev.filter((comments) => comments.id !== comment_id));
+                setErro(null);
+            })
+            .catch((error) => {
+                setErro(error.message || "Erro desconhecido ao excluir o comentário.");
+            });
+        }
+    };
 
     if (erro) return <p>{erro}</p>;
     if (!usuario) return <p>Carregando usuário...</p>;
@@ -180,7 +204,7 @@ export default function Comentarios() {
                             </div>
                             <div className="options-comment">
                                 <i className="bi bi-arrow-90deg-right"></i>
-                                <i className="bi bi-trash"></i>
+                                <i class="bi bi-trash" onClick={() => handleDeleteComment(comment.id)}></i>
                             </div>
                         </div>
                         <div className="text-comment">

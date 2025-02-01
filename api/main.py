@@ -485,14 +485,14 @@ class Comment(Resource):
         
         db.session.delete(result)
         db.session.commit()
-        return "", 204
+        return {"message": "Comentário deletado com sucesso!"}, 200
 
 #URI API
 api.add_resource(Pong, "/api/v0.0.1/ping")
 api.add_resource(User, "/api/v0.0.1/user", "/api/v0.0.1/user/id/<int:user_id>", "/api/v0.0.1/user/email/<string:user_email>" , "/api/v0.0.1/user/<string:api_key>/<int:user_id>")
 api.add_resource(Post, "/api/v0.0.1/post", "/api/v0.0.1/post/<string:type>", "/api/v0.0.1/post/<string:type>/<int:id>", "/api/v0.0.1/post/<int:post_id>")
 api.add_resource(Category, "/api/v0.0.1/categoria", "/api/v0.0.1/categoria/<int:category_id>")
-api.add_resource(Comment, "/api/v0.0.1/comment", "/api/v0.0.1/comment/<string:type>/<int:id>", "/api/v0.0.1/comment/<string:type>/<int:id>/<int:usuario>")
+api.add_resource(Comment, "/api/v0.0.1/comment", "/api/v0.0.1/comment/<int:comment_id>", "/api/v0.0.1/comment/<string:type>/<int:id>", "/api/v0.0.1/comment/<string:type>/<int:id>/<int:usuario>")
 
 
 if __name__ == "__main__":
